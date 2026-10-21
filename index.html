@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><title>LoanTrack Pro</title>
+<meta name="theme-color" content="#0b2a5b">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);--bg:#f5f7fa;--card:#fff;--tx:#14213d;--mu:#5b6678;--nv:#0b2a5b;--sky:#dcebfa;--ok:#1e8e3e;--wn:#b97800;--bd:#d93025;--ln:#e2e7ee}
+@media (prefers-color-scheme:dark){:root:not([data-theme=light]){color-scheme:dark;--bg:#0f1624;--card:#18223a;--tx:#e8edf6;--mu:#9aa6bb;--nv:#6ea8ff;--sky:#22345a;--ok:#4cc36f;--wn:#f5b942;--bd:#ff7b72;--ln:#2a3654}}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font:15px/1.45 "Plus Jakarta Sans",system-ui,-apple-system,Roboto,sans-serif;padding-bottom:76px}
+header{background:var(--nv);color:#fff;padding:14px 16px;font-weight:700;display:flex;gap:8px;align-items:center}
+@media (prefers-color-scheme:dark){header{color:#0f1624}}
+main{padding:12px;max-width:640px;margin:auto}
+.card{background:var(--card);border:1px solid var(--ln);border-radius:12px;padding:12px;margin-bottom:10px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.grid .card{margin:0}
+.n{font-size:24px;font-weight:700;color:var(--nv)}.mu{color:var(--mu);font-size:13px}
+nav{position:fixed;bottom:0;left:0;right:0;background:var(--card);border-top:1px solid var(--ln);display:flex;padding-bottom:env(safe-area-inset-bottom,0px)}
+nav button{flex:1;background:none;border:0;padding:12px 2px;color:var(--mu);font-size:12px;min-height:56px}
+nav button.on{color:var(--nv);font-weight:700}
+input,select,textarea,button.b{width:100%;padding:12px;border:1px solid var(--ln);border-radius:10px;background:var(--card);color:var(--tx);font:inherit;margin:4px 0 8px}
+button.b{background:var(--nv);color:#fff;border:0;font-weight:700;min-height:48px;cursor:pointer}
+@media (prefers-color-scheme:dark){button.b{color:#0f1624}}
+button.s{background:var(--sky);color:var(--nv)}
+.tag{display:inline-block;padding:2px 8px;border-radius:99px;font-size:12px;font-weight:600;background:var(--sky);color:var(--nv)}
+.ok{color:var(--ok)}.wn{color:var(--wn)}.bd{color:var(--bd)}.err{color:var(--bd);font-size:13px;margin:-4px 0 6px}
+.demo{background:var(--wn);color:#fff;border-radius:4px;padding:0 5px;font-size:11px;margin-left:4px}
+.notice{font-size:12px;color:var(--mu);margin:6px 0}
+.row{display:flex;justify-content:space-between;gap:8px}
+.bar{height:10px;background:var(--sky);border-radius:5px;overflow:hidden;margin:3px 0 8px}.bar i{display:block;height:100%;background:var(--nv)}
+.hero{background:var(--nv);color:#fff;margin:-12px -12px 12px;padding:4px 16px 20px;border-radius:0 0 24px 24px}
+@media (prefers-color-scheme:dark){.hero{color:#0f1624}}
+.hero h2{margin:0;font-size:22px}.hero .mu{color:inherit;opacity:.85}
+.av{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:50%;background:var(--sky);color:var(--nv);font-weight:700;font-size:12px;flex:none}
+.bell{position:relative;font-size:20px}.bell i{position:absolute;top:-6px;right:-8px;background:#e53935;color:#fff;border-radius:50%;font:700 10px/16px system-ui;width:16px;text-align:center}
+.ic{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;margin-bottom:6px}
+.donut{width:120px;height:120px;border-radius:50%;flex:none;display:flex;align-items:center;justify-content:center}
+.donut div{width:74px;height:74px;border-radius:50%;background:var(--card);display:flex;flex-direction:column;align-items:center;justify-content:center;font-weight:700}
+.dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:6px}
+.bars{display:flex;align-items:flex-end;gap:10px;height:130px;margin-top:8px}.bars div{flex:1;text-align:center;font-size:12px}.bars i{display:block;background:#2f80ed;border-radius:6px 6px 0 0;margin-bottom:4px}
+.plus{display:inline-flex;width:46px;height:46px;border-radius:50%;background:#2f80ed;color:#fff;font-size:28px;align-items:center;justify-content:center;margin-top:-26px;box-shadow:0 4px 10px rgba(47,128,237,.4)}
+h3.sec{margin:14px 0 6px;font-size:16px;color:var(--nv)}
+.pri-High{background:#fde2e0;color:#c62828}.pri-Medium{background:#fdf0c9;color:#9a6a00}.pri-Low{background:#dcf5e3;color:#1e7a3a}
+table{border-collapse:collapse;width:100%;white-space:nowrap}th,td{padding:4px 6px;border-bottom:1px solid var(--ln);text-align:right}th:first-child,td:first-child{text-align:left}
+.em-top{background:linear-gradient(135deg,#0b2a5b,#16408a);border:1px solid rgba(212,175,55,.45);border-radius:20px;padding:18px;color:#fff;margin-bottom:12px}
+.em-top h3{margin:2px 0;font:700 24px "Sora","Plus Jakarta Sans",system-ui,sans-serif;color:#fff}.em-k{font-size:10px;letter-spacing:.18em;color:#d4af37;font-weight:600}.em-s{font-size:12px;color:#c8d4ea}
+.em-card{border-radius:18px;padding:14px}.em-l{display:block;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--mu);margin:10px 0 0;font-weight:600}
+.em-in{display:flex;align-items:center;gap:8px;background:var(--bg);border:1.5px solid var(--ln);border-radius:14px;padding:0 12px;margin:6px 0}.em-in:focus-within{border-color:#d4af37}
+.em-in span{color:#b8912f;font-weight:700}.em-in input,.em-in select{border:0;margin:0;background:none;width:auto;flex:1;padding:14px 0;font-size:18px;font-weight:600;color:var(--tx);outline:0}.em-in select{flex:none;font-size:14px;font-weight:500;padding:14px 0}
+.em-hero{background:radial-gradient(circle at 20% 0,#1d4f9f,#0a1f45 70%);border:1px solid rgba(212,175,55,.5);border-radius:22px;padding:20px;color:#fff;margin:12px 0;box-shadow:0 10px 28px rgba(11,42,91,.35)}
+.em-big{font:700 36px "Sora","Plus Jakarta Sans",system-ui,sans-serif;color:#f3d77a;margin:4px 0}.em-ring{display:flex;align-items:center;gap:14px;margin-top:12px}
+.em-leg{flex:1}.em-leg div{display:flex;flex-direction:column;font-size:12px;color:#c8d4ea;margin:6px 0}.em-leg b{color:#fff;font-size:15px}.em-leg i{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:6px}
+.em-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px}.em-grid div{background:var(--card);border:1px solid var(--ln);border-left:3px solid #d4af37;border-radius:12px;padding:10px}.em-grid span{display:block;font-size:11px;color:var(--mu)}.em-grid b{font-size:15px}
+.em-h{font:600 15px "Sora","Plus Jakarta Sans",system-ui,sans-serif;color:var(--nv);cursor:pointer}.em-bars{display:flex;gap:6px;align-items:flex-end;overflow-x:auto;padding:8px 0}.em-bars>div{text-align:center;font-size:10px;color:var(--mu)}.em-col{display:flex;flex-direction:column;width:16px;justify-content:flex-end;height:92px}.em-col i{display:block}
+.em-empty{background:var(--card);border:1px dashed var(--ln);border-radius:16px;padding:22px;text-align:center;color:var(--mu);margin-top:10px}
+#splash{position:fixed;inset:0;z-index:100;background:radial-gradient(circle at 50% 28%,#1d4f9f 0,#0b2a5b 45%,#050f24 100%);display:flex;flex-direction:column;align-items:center;justify-content:space-between;padding:calc(env(safe-area-inset-top,0px) + 64px) 28px calc(env(safe-area-inset-bottom,0px) + 36px);color:#fff;text-align:center;transition:opacity .5s,transform .5s}
+#splash.out{opacity:0;transform:scale(1.04);pointer-events:none}
+#splash .sp-mid{display:flex;flex-direction:column;align-items:center;margin-top:8vh}
+.sp-logo{width:116px;height:116px;border-radius:30px;background:linear-gradient(145deg,#12408a,#0a1f45);border:1.5px solid rgba(212,175,55,.7);display:flex;align-items:center;justify-content:center;box-shadow:0 0 0 10px rgba(212,175,55,.08),0 0 0 22px rgba(212,175,55,.04),0 18px 40px rgba(0,0,0,.45);animation:spUp .9s both,spFloat 4s ease-in-out 1s infinite}
+.sp-logo rect{transform-box:fill-box;transform-origin:bottom;animation:spBar .8s both}.sp-logo rect:nth-child(2){animation-delay:.15s}.sp-logo rect:nth-child(3){animation-delay:.3s}
+#splash h1{font:700 38px "Sora","Plus Jakarta Sans",system-ui,sans-serif;margin:30px 0 6px;letter-spacing:.3px;animation:spUp .9s .25s both}#splash h1 span{color:#f3d77a}
+#splash .sp-line{width:56px;height:2px;background:linear-gradient(90deg,transparent,#d4af37,transparent);margin:10px 0;animation:spUp .9s .4s both}
+#splash .sp-tag{font-size:12px;letter-spacing:.28em;text-transform:uppercase;color:#c8d4ea;animation:spUp .9s .5s both}
+#splash .sp-bot{width:100%;max-width:360px;animation:spUp .9s .7s both}
+#splash button{width:100%;border:0;border-radius:99px;padding:17px;font:700 17px "Plus Jakarta Sans",system-ui,sans-serif;letter-spacing:.04em;color:#0a1f45;background:linear-gradient(135deg,#f3d77a,#d4af37 60%,#b8912f);box-shadow:0 10px 26px rgba(212,175,55,.35);cursor:pointer}
+#splash small{display:block;margin-top:14px;font-size:11px;color:#8ea1c4}
+@keyframes spUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}@keyframes spFloat{50%{transform:translateY(-8px)}}@keyframes spBar{from{transform:scaleY(0)}to{transform:scaleY(1)}}
+@media (prefers-reduced-motion:reduce){#splash *{animation:none!important}}
+.hm-hero{background:radial-gradient(circle at 85% 0,#2a5fb8 0,#0b2a5b 50%,#06122b 100%);border:1px solid rgba(212,175,55,.5);border-radius:24px;padding:20px;color:#fff;margin-bottom:12px;box-shadow:0 12px 30px rgba(11,42,91,.35)}
+.hm-date{font-size:12px;color:#c8d4ea;margin:4px 0 16px}.hm-lbl{font-size:12px;color:#c8d4ea}.hm-big{font:700 38px "Sora","Plus Jakarta Sans",system-ui,sans-serif;color:#f3d77a;margin:2px 0 12px}
+.hm-chips{display:flex;gap:8px;flex-wrap:wrap}.hm-chips span{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.18);border-radius:99px;padding:5px 11px;font-size:12px}.hm-chips .hm-red{background:rgba(235,87,87,.3);border-color:#eb5757}
+.hm-qa{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:12px}.hm-qa button{background:var(--card);border:1px solid var(--ln);border-radius:16px;padding:12px 2px;color:var(--tx);font-size:12px;font-weight:600;display:flex;flex-direction:column;align-items:center;gap:6px}.hm-qa span{width:38px;height:38px;border-radius:12px;background:linear-gradient(135deg,#0b2a5b,#16408a);display:flex;align-items:center;justify-content:center;font-size:18px;border:1px solid rgba(212,175,55,.5)}
+.hm-kp{display:flex;gap:10px;overflow-x:auto;scroll-snap-type:x mandatory;margin:0 -12px 12px;padding:2px 12px 6px}.hm-kp>div{flex:none;width:120px;scroll-snap-align:start;background:var(--card);border:1px solid var(--ln);border-radius:16px;padding:12px;display:flex;flex-direction:column}.hm-kp span{font-size:18px}.hm-kp b{font:700 26px "Sora","Plus Jakarta Sans",system-ui,sans-serif;color:var(--nv);margin:4px 0 0}.hm-kp small{color:var(--mu);font-size:11px}
+.hm-fn{display:flex;align-items:center;gap:8px;margin:9px 0;font-size:12px}.hm-fn>span{width:92px;color:var(--mu)}.hm-fn>div{flex:1;height:12px;background:var(--sky);border-radius:6px;overflow:hidden}.hm-fn>div i{display:block;height:100%;border-radius:6px;background:linear-gradient(90deg,#2f80ed,#d4af37)}.hm-fn>b{width:28px;text-align:right}
+.hm-tl{display:flex;gap:10px;padding:8px 0;border-bottom:1px solid var(--ln)}.hm-tl>i{flex:none;width:10px;height:10px;border-radius:50%;background:#d4af37;margin-top:6px;box-shadow:0 0 0 4px rgba(212,175,55,.2)}
+.cb{display:inline-block;padding:2px 9px;border-radius:99px;font-size:11px;font-weight:600;margin:2px 4px 2px 0;white-space:nowrap}
+.cb-g{background:#d9f5e5;color:#13794a}.cb-a{background:#fdf0c9;color:#8a5d00}.cb-r{background:#fde2e0;color:#c62828}.cb-b{background:#dbe9ff;color:#1c4fb3}.cb-n{background:#e9edf3;color:#5b6678}
+@media (prefers-color-scheme:dark){.cb-g{background:#12402a;color:#7ee2a8}.cb-a{background:#4a3a0d;color:#f5c75a}.cb-r{background:#4a1c19;color:#ff9a93}.cb-b{background:#17305e;color:#9ec2ff}.cb-n{background:#2a3654;color:#aab6cc}}
+.cbr{margin-top:6px}.cu{border-left:3px solid #2f80ed}.cu-seg{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}
+.cu-seg{grid-template-columns:repeat(4,1fr)}.cu-seg .b{padding:10px 2px;font-size:12px;min-height:44px}
+button,input,select,textarea{font-family:inherit}
+.bkb{background:rgba(255,255,255,.18);border:0;color:inherit;width:34px;height:34px;border-radius:50%;font-size:18px;cursor:pointer}
+h3,h4,.n,.em-h{letter-spacing:-.01em}
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script type="module" src="/src/backend.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Sora:wght@600;700&display=swap" rel="stylesheet">
+</head><body>
+<div id="splash"><div class="sp-mid"><div class="sp-logo"><svg viewBox="0 0 64 64" width="68" height="68"><rect x="10" y="34" width="11" height="20" rx="3" fill="#5b8fd6"/><rect x="26" y="24" width="11" height="30" rx="3" fill="#8db4ec"/><rect x="42" y="14" width="11" height="40" rx="3" fill="#d4af37"/><path d="M9 26 L24 14 L33 19 L52 6" fill="none" stroke="#f3d77a" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M43 6 H52 V15" fill="none" stroke="#f3d77a" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><h1>LoanTrack <span>Pro</span></h1><div class="sp-line"></div><div class="sp-tag">Loan management made simple</div></div><div class="sp-bot"><button onclick="var s=document.getElementById('splash');s.classList.add('out');setTimeout(function(){s.remove()},500)">Let’s Start →</button><small>Independent loan workflow tool</small></div></div>
+<header><span id="bk"></span><b style="font-size:18px">◆ LoanTrack <span style="color:#9cc7ff">Pro</span></b><span id="bell" style="margin-left:auto"></span><span class="av" style="background:#3b82f6;color:#fff">U</span><span id="who" style="font-weight:400;font-size:12px"></span></header>
+<main id="app"><p class="mu">Loading…</p></main>
+<nav id="nav"></nav>
+<script>
+const ST=["New Lead","Contacted","Application In Progress","Application Submitted","Documents Pending","Documents Complete","Verification In Progress","Under Review","Approved","Rejected","On Hold","Disbursement In Progress","Disbursed","Closed"];
+const LT=["Personal Loan","Home Loan","Business Loan","Vehicle Loan","Loan Against Property","Other"];
+const SRC=["Walk-in","Referral","Phone Enquiry","Existing Customer","Other"];
+const NOTE="Internal tracking status — not an official lender decision unless verified through an authorized source.";
+let sess=null,staff=[],isOwner=false,canAll=false,rawC=[],rawT=[],FV={},draft=[],ei=null,skipCap=false,pinRes=[],arm=null,resch=null,db=null,me=null,isAdmin=false,tab="home",clients=[],tasks=[],sel=null,q="",fs="",errs={},toast="";
+const $=s=>document.querySelector(s);
+const ICN={home:"⌂",clients:"👥",add:'<span class="plus">+</span>',fu:"📅",calc:"🧮",cust:"🚗",me:"👤"};
+const TI={Call:"📞",Meeting:"💬",Email:"✉️",Other:"📌"};
+const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const today=()=>new Date().toISOString().slice(0,10);
+const mask=m=>m?String(m).replace(/\d(?=\d{2})/g,"•"):"—";
+const money=n=>"₹"+Number(n).toLocaleString("en-IN");
+const col=s=>["Approved","Disbursed","Closed"].includes(s)?"ok":s=="Rejected"?"bd":"wn";
+async function init(){
+  try{const u=await claude.use("user");db=await claude.use("db");
+    if(u){isOwner=u.isOwner();}
+  }catch(e){}
+  if(!db){$("#app").innerHTML='<div class="card">Sign in to claude.ai to use LoanTrack Pro. Data is stored in the app database.</div>';return}
+  watchCalcs();watchStaff();watchCust();
+  db.collection("clients").onSnapshot(s=>{clients=s.docs.map(d=>({id:d.id,...d.data()}));clients.filter(c=>c.demo).forEach(c=>db.collection("clients").doc(c.id).delete().catch(()=>{}));rawC=clients.filter(c=>!c.demo);render()},e=>{toast=e.message;render()});
+  db.collection("tasks").onSnapshot(s=>{tasks=s.docs.map(d=>({id:d.id,...d.data()}));tasks.filter(t=>String(t.cid).startsWith("DEMO")).forEach(t=>db.collection("tasks").doc(t.id).delete().catch(()=>{}));rawT=tasks.filter(t=>!String(t.cid).startsWith("DEMO"));render()});
+}
+function counts(){const c={};ST.forEach(s=>c[s]=clients.filter(x=>!x.archived&&x.status==s).length);return c}
+function fmtC(n){n=Number(n)||0;return n>=1e7?"₹"+(n/1e7).toFixed(2)+" Cr":n>=1e5?"₹"+(n/1e5).toFixed(2)+" L":money(n)}
+function home(){
+  const L=clients.filter(x=>!x.archived),c=counts(),t=today(),pend=tasks.filter(x=>x.status=="Pending");
+  const due=pend.filter(x=>x.date==t),od=pend.filter(x=>x.date<t),n=s=>c[s]||0;
+  const pa=n("Application In Progress")+n("Application Submitted")+n("Documents Pending")+n("Documents Complete")+n("Verification In Progress")+n("Under Review");
+  const ip=n("Application In Progress")+n("Verification In Progress")+n("Disbursement In Progress");
+  const hr=new Date().getHours(),gr=hr<12?"Good Morning":hr<17?"Good Afternoon":"Good Evening";
+  const open=L.filter(x=>!["Rejected","Closed","Disbursed"].includes(x.status)),pipe=open.reduce((s,x)=>s+Number(x.amount||0),0);
+  const dstr=new Date().toLocaleDateString("en-GB",{weekday:"long",day:"numeric",month:"long",year:"numeric"});
+  const kp=[["👥","Total Clients",L.length,"#5b8fd6"],["✨","New Leads",n("New Lead"),"#2f80ed"],["📄","Pending Apps",pa,"#d4a017"],["✅","Approved",n("Approved"),"#27ae60"],["₹","Disbursed",n("Disbursed"),"#9b51e0"],["⏳","In Progress",ip,"#14b8a6"],["📅","Due Today",due.length,"#f2994a"],["⚠️","Overdue",od.length,"#eb5757"]];
+  const qa=[["🔁","Cross Sell","cust","cuv='cross';cusel=null;"],["🧮","EMI Calc","calc",""],["📅","Follow-ups","fu",""],["🚗","Customers","cust","cuv='list';cusel=null;"]];
+  const FN=[["Leads",["New Lead","Contacted"]],["Application",["Application In Progress","Application Submitted"]],["Documents",["Documents Pending","Documents Complete"]],["Verify & Review",["Verification In Progress","Under Review"]],["Approved",["Approved"]],["Disbursal",["Disbursement In Progress","Disbursed"]]].map(([a,b])=>[a,b.reduce((s,x)=>s+n(x),0)]);
+  const fm=Math.max(1,...FN.map(x=>x[1]));
+  const G=[["New Lead",n("New Lead"),"#2f80ed"],["In Progress",n("Application In Progress")+n("Application Submitted")+n("Contacted"),"#27ae60"],["Under Review",n("Under Review")+n("Verification In Progress"),"#f2c94c"],["Approved",n("Approved"),"#14b8a6"],["Disbursed",n("Disbursed"),"#9b51e0"],["Rejected",n("Rejected"),"#eb5757"]];
+  G.push(["Others",Math.max(0,L.length-G.reduce((s,x)=>s+x[1],0)),"#a0aec0"]);
+  let acc=0;const tot=Math.max(1,L.length),grad=G.map(([,v,k])=>{const s=acc/tot*100;acc+=v;return `${k} ${s}% ${acc/tot*100}%`}).join(",");
+  const mo=[];for(let i=5;i>=0;i--){const d=new Date();d.setDate(1);d.setMonth(d.getMonth()-i);const k=d.toISOString().slice(0,7);mo.push([d.toLocaleString("en",{month:"short"}),L.filter(x=>(x.appDate||x.created||"").slice(0,7)==k).length])}
+  const mx=Math.max(1,...mo.map(m=>m[1]));
+  const mix=LT.map(l=>{const a=L.filter(x=>x.loanType==l);return[l,a.length,a.reduce((s,x)=>s+Number(x.amount||0),0)]}).filter(x=>x[1]);const mxm=Math.max(1,...mix.map(x=>x[2]));
+  const act=clients.filter(x=>!x.archived).flatMap(x=>(x.history||[]).map(h=>({...h,name:x.name,id:x.id}))).sort((a,b)=>b.at.localeCompare(a.at)).slice(0,5);
+  const ini=s=>String(s).split(" ").map(w=>w[0]).join("").slice(0,2).toUpperCase();
+  const focus=[...od.map(x=>({...x,late:1})),...due].slice(0,4);
+  return `<div class="hm-hero"><div class="em-k">${gr.toUpperCase()} · ${(RL[(staff.find(x=>x.id==sess)||{}).role]||"").toUpperCase()}</div><div class="hm-date">${dstr}</div>
+  <div class="hm-lbl">Open pipeline (requested amount)</div><div class="hm-big">${fmtC(pipe)}</div>
+  <div class="hm-chips"><span>${open.length} open cases</span><span>${due.length} due today</span><span class="${od.length?"hm-red":""}">${od.length} overdue</span></div></div>
+  <div class="hm-qa">${qa.map(([i,l,k,x])=>`<button onclick="tab='${k}';sel=null;${x}render()"><span>${i}</span>${l}</button>`).join("")}</div>
+  <div class="hm-kp">${kp.map(([i,l,v,k])=>`<div style="border-top:3px solid ${k}"><span>${i}</span><b>${v}</b><small>${l}</small></div>`).join("")}</div>
+  <div class="card"><b class="em-h">Pipeline funnel</b>${FN.map(([a,v],i)=>`<div class="hm-fn"><span>${a}</span><div><i style="width:${Math.max(v?8:0,v/fm*100)}%;opacity:${1-i*.1}"></i></div><b>${v}</b></div>`).join("")}<div class="mu" style="font-size:11px;margin-top:6px">On Hold ${n("On Hold")} · Rejected ${n("Rejected")} · Closed ${n("Closed")}</div></div>
+  <div class="card"><b class="em-h">Today's focus</b>${focus.map(x=>{const cl=clients.find(y=>y.id==x.cid)||{};return `<div class="row" style="align-items:center;padding:8px 0;border-bottom:1px solid var(--ln)" onclick="tab='clients';sel='${x.cid}';render()"><span class="ic" style="background:var(--sky);margin:0">${TI[x.type]||"📌"}</span><span style="flex:1;margin-left:10px"><b>${esc(x.name)}</b><div class="mu">${esc(cl.ref||"")} · ${x.type}${x.late?" · due "+x.date:""}</div></span><span class="tag" style="${x.late?"background:#fde2e0;color:#c62828":"background:#fdf0c9;color:#9a6a00"}">${x.late?"Overdue":"Today"}</span></div>`}).join("")||'<p class="mu">All clear — no follow-ups due.</p>'}<a class="mu" style="display:block;margin-top:8px" onclick="tab='fu';render()">View all follow-ups →</a></div>
+  <div class="card"><b class="em-h">Status distribution</b><div class="row" style="align-items:center;margin-top:8px"><div class="donut" style="background:conic-gradient(${L.length?grad:"#a0aec0 0 100%"})"><div><span style="font-size:20px">${L.length}</span><span class="mu">Total</span></div></div><div style="flex:1;padding-left:12px">${G.map(([a,v,k])=>`<div class="row mu"><span><span class="dot" style="background:${k}"></span>${a}</span><span>${v}</span></div>`).join("")}</div></div></div>
+  <div class="card"><b class="em-h">Applications · last 6 months</b><div class="bars">${mo.map(([m,v])=>`<div><span>${v}</span><i style="height:${v/mx*90+3}px;background:linear-gradient(#d4af37,#2f80ed)"></i>${m}</div>`).join("")}</div></div>
+  ${mix.length?`<div class="card"><b class="em-h">Loan type mix</b>${mix.map(([l,k,a])=>`<div class="hm-fn"><span style="width:96px">${l.replace(" Loan","")}</span><div><i style="width:${a/mxm*100}%;background:linear-gradient(90deg,#5b8fd6,#d4af37)"></i></div><b style="width:62px">${fmtC(a)}</b></div>`).join("")}</div>`:""}
+  <div class="card"><b class="em-h">Latest status updates</b>${act.map(h=>`<div class="hm-tl" onclick="tab='clients';sel='${h.id}';render()"><i></i><div><b>${esc(h.name)}</b> <span class="tag ${col(h.to)}">${h.to}</span><div class="mu">${new Date(h.at).toLocaleString()} · ${esc(h.note||"")}</div></div></div>`).join("")||'<p class="mu">No activity yet.</p>'}</div>
+  <div class="row"><h3 class="sec">Recent clients</h3><a class="mu" style="align-self:center" onclick="tab='clients';render()">View all</a></div>
+  ${[...L].sort((a,b)=>(b.created||"").localeCompare(a.created||"")).slice(0,4).map(x=>`<div class="card row" style="align-items:center" onclick="tab='clients';sel='${x.id}';render()"><span class="av">${ini(x.name)}</span><span style="flex:1;margin-left:10px"><b>${esc(x.name)}</b><div class="mu">${esc(x.ref||"")} · ${x.loanType}</div></span><span class="tag ${col(x.status)}">${x.status}</span></div>`).join("")||'<div class="card mu">No clients yet — tap Add Client to start.</div>'}
+  <div class="notice">All figures come from recorded data. Pipeline shows requested amounts, not approvals. Workload statistics, not conversion performance.</div>`}
+
+function homeOld(){
+  const L=clients.filter(x=>!x.archived),c=counts(),t=today(),pend=tasks.filter(x=>x.status=="Pending");
+  const due=pend.filter(x=>x.date==t).length,od=pend.filter(x=>x.date<t).length;
+  const cards=[["Assigned Clients",L.length],["New Leads",c["New Lead"]],["Submitted",c["Application Submitted"]],["Docs Pending",c["Documents Pending"]],["Verification",c["Verification In Progress"]],["Under Review",c["Under Review"]],["Approved",c["Approved"]],["Rejected",c["Rejected"]],["Disbursing",c["Disbursement In Progress"]],["Disbursed",c["Disbursed"]],["Due Today",due],["Overdue",od]];
+  const mx=Math.max(1,...ST.map(s=>c[s]));
+  return `<div class="grid">${cards.map(([a,b])=>`<div class="card"><div class="n ${a=="Overdue"&&b?"bd":""}">${b}</div><div class="mu">${a}</div></div>`).join("")}</div>
+  <div class="card" style="margin-top:10px"><b>Status distribution</b>${ST.filter(s=>c[s]).map(s=>`<div class="row mu"><span>${s}</span><span>${c[s]}</span></div><div class="bar"><i style="width:${c[s]/mx*100}%"></i></div>`).join("")||'<p class="mu">No records yet.</p>'}</div>
+  <div class="notice">Counts are workload statistics from recorded data, not loan conversion performance.</div>
+  ${!clients.length?'<button class="b s" onclick="seed()">Load DEMO records</button>':""}`}
+function list(){
+  let L=clients.filter(x=>!x.archived&&(!fs||x.status==fs)&&(!q||[x.name,x.ref,x.id].join(" ").toLowerCase().includes(q.toLowerCase())));
+  L.sort((a,b)=>(b.created||"").localeCompare(a.created||""));
+  return `<input id="q" placeholder="Search name, reference, ID" value="${esc(q)}" oninput="q=this.value;render(true)">
+  <select onchange="fs=this.value;render()"><option value="">All statuses</option>${ST.map(s=>`<option ${s==fs?"selected":""}>${s}</option>`).join("")}</select>
+  ${L.slice(0,50).map(x=>`<div class="card" onclick="sel='${x.id}';render()"><div class="row"><b>${esc(x.name)}${x.demo?'<span class="demo">DEMO</span>':""}</b><span class="tag ${col(x.status)}">${x.status}</span></div><div class="mu">${esc(x.ref)||"No ref"} · ${x.loanType} · ${money(x.amount)}</div><div class="mu">${mask(x.mobile)} · ${esc(x.city)}</div></div>`).join("")||'<div class="card mu">No clients found.</div>'}`}
+function field(k,label,html){return `<label class="mu">${label}</label>${html}${errs[k]?`<div class="err">${errs[k]}</div>`:""}`}
+function addForm(){return `<div class="card">${field("name","Client name *",'<input id="f_name">')}${field("ref","Application reference",'<input id="f_ref">')}${field("mobile","Mobile (10 digits)",'<input id="f_mobile" inputmode="numeric">')}<h4 class="mu" style="margin:8px 0 2px">Address</h4><input id="f_village" list="dl_village" placeholder="Village"><datalist id="dl_village">${uniq(clients.map(c=>c.village)).map(a=>`<option value="${esc(a)}">`).join("")}</datalist><input id="f_city" list="dl_city" placeholder="City"><datalist id="dl_city">${uniq(clients.map(c=>c.city)).map(a=>`<option value="${esc(a)}">`).join("")}</datalist>${field("loanType","Loan type",`<select id="f_lt">${LT.map(x=>`<option>${x}</option>`).join("")}</select>`)}${field("amount","Requested amount *",'<input id="f_amt" inputmode="decimal">')}${field("date","Application date",`<input id="f_date" type="date" value="${today()}">`)}${field("src","Lead source",`<select id="f_src">${SRC.map(x=>`<option>${x}</option>`).join("")}</select>`)}${field("pri","Priority",'<select id="f_pri"><option>Low</option><option selected>Medium</option><option>High</option></select>')}${field("fu","Next follow-up date",'<input id="f_fu" type="date">')}${field("notes","Notes",'<textarea id="f_notes" rows="2"></textarea>')}<h4 class="mu" style="margin:8px 0 2px">Loan assets</h4>${draft.map((a,i)=>`<div class="card mu">${assetLine(a)} <a style="color:var(--bd)" onclick="rmDraft(${i})">Remove</a></div>`).join("")}${assetForm("f_a")}<button class="b s" onclick="addDraft()">Add asset to application</button><button class="b" onclick="saveClient()">Save client</button></div>`}
+/* LoanTrack EMI engine: all money in integer paise (decimal-safe). Estimates only. */
+const rnd=(x,m)=>m=="up"?Math.ceil(x-1e-7):m=="down"?Math.floor(x+1e-7):Math.round(x);
+const P2=v=>Math.round(Number(v||0)*100);
+function addM(s,i){const[y,m,d]=s.split("-").map(Number);const t=new Date(Date.UTC(y,m-1+i,1));const dim=new Date(Date.UTC(t.getUTCFullYear(),t.getUTCMonth()+1,0)).getUTCDate();t.setUTCDate(Math.min(d,dim));return t.toISOString().slice(0,10)}
+function emiOf(bal,r,n,md){return r==0?rnd(bal/n,md):rnd(bal*r*Math.pow(1+r,n)/(Math.pow(1+r,n)-1),md)}
+const okD=s=>/^\d{4}-\d{2}-\d{2}$/.test(s||"")&&!isNaN(Date.parse(s));
+function calcLoan(o){
+  const e={},blank=v=>v===""||v==null,P=Number(o.P),rate=Number(o.rate),T=Number(o.tenure);
+  if(blank(o.P)||!(P>0))e.P="Loan amount must be a positive number.";
+  if(blank(o.rate)||!(rate>=0))e.rate="Interest rate must be 0 or more.";
+  const n=o.unit=="y"?Math.round(T*12):Math.round(T);
+  if(blank(o.tenure)||!(T>0))e.tenure="Tenure must be positive.";
+  else if(Math.abs((o.unit=="y"?T*12:T)-n)>1e-9||n<1)e.tenure="Tenure must be a whole number of months.";
+  else if(n>600)e.tenure="Maximum tenure is 50 years.";
+  if(!okD(o.start))e.start="Enter a valid EMI start date.";
+  ["fee","other","extra","partAmt"].forEach(k=>{if(!blank(o[k])&&!(Number(o[k])>=0))e[k]="Must be 0 or more."});
+  if(!blank(o.partAmt)&&Number(o.partAmt)>0&&!okD(o.partDate))e.partDate="Enter a valid part-payment date.";
+  if(!blank(o.rcRate)&&(!(Number(o.rcRate)>=0)||!okD(o.rcDate)))e.rcRate="Rate change needs a date and a rate of 0 or more.";
+  const flat=o.method=="flat";
+  if(flat&&(Number(o.extra)>0||Number(o.partAmt)>0||!blank(o.rcRate)))e.method="Extra payments, part-payments and rate changes are only supported for reducing balance.";
+  if(Object.keys(e).length)return{err:e};
+  const md=o.rounding||"nearest",fee=P2(o.fee),oth=P2(o.other),fin=!!o.financed;
+  const Pp=P2(P)+(fin?fee+oth:0),rows=[];
+  let emi;
+  if(flat){
+    const TI=rnd(Pp*rate/100*(n/12),md);emi=rnd((Pp+TI)/n,md);let cum=0;
+    for(let i=1;i<=n;i++){const int=Math.round(TI*i/n)-Math.round(TI*(i-1)/n),pr=Math.round(Pp*i/n)-Math.round(Pp*(i-1)/n);const open=Pp-cum;cum+=pr;rows.push({i,due:addM(o.start,i-1),open,pay:int+pr,int,pr,ap:0,fee:0,close:Pp-cum})}
+  }else{
+    let bal=Pp,r=rate/1200,i=0,partDone=false,rcDone=false;const extra=P2(o.extra),part=P2(o.partAmt),rcR=blank(o.rcRate)?null:Number(o.rcRate)/1200;
+    emi=emiOf(bal,r,n,md);const emi0=emi;
+    while(bal>0&&i<n){i++;const due=addM(o.start,i-1),open=bal;
+      if(rcR!==null&&!rcDone&&due>=o.rcDate){r=rcR;rcDone=true;emi=emiOf(bal,r,n-i+1,md)}
+      const int=rnd(bal*r,md);let pay=emi;if(i==n||pay>=bal+int)pay=bal+int;
+      const pr=pay-int;bal-=pr;let ap=0;
+      if(extra&&bal>0){ap=Math.min(extra,bal);bal-=ap}
+      if(part&&!partDone&&due>=o.partDate&&bal>0){const pp=Math.min(part,bal);ap+=pp;bal-=pp;partDone=true;if(o.partMode=="emi"&&bal>0&&i<n)emi=emiOf(bal,r,n-i,md)}
+      rows.push({i,due,open,pay,int,pr,ap,fee:0,close:bal});
+    }
+    emi=emi0;
+  }
+  if(!fin&&rows.length)rows[0].fee=fee+oth;
+  const sum=k=>rows.reduce((s,x)=>s+x[k],0),ti=sum("int"),prin=sum("pr")+sum("ap"),rep=sum("pay")+sum("ap"),sep=fin?0:fee+oth;
+  return{rows,n,emi,t:{principal:P2(P),financedPrincipal:Pp,interest:ti,repayment:rep,fees:fee,other:oth,feesSeparate:sep,totalCost:rep+sep,ratio:P2(P)?ti/P2(P):0,payoff:rows[rows.length-1].due,principalRepaid:prin,finalBalance:rows[rows.length-1].close}};
+}
+
+
+let CR=null,CV="year",CY=0,CSV=false,calcs=[];
+const mm=p=>"₹"+(p/100).toLocaleString("en-IN",{minimumFractionDigits:2,maximumFractionDigits:2});
+function watchCalcs(){db.collection("calcs").onSnapshot(s=>{calcs=s.docs.map(d=>({id:d.id,...d.data()}));render()},()=>{})}
+const cg=k=>($("#f_c_"+k)||{value:""}).value.trim();
+const ci=(k,ph,x="")=>`<input id="f_c_${k}" placeholder="${ph}" ${x}>`;
+const csel=(k,opts)=>`<select id="f_c_${k}">${opts.map(([v,l])=>`<option value="${v}">${l}</option>`).join("")}</select>`;
+function calcInputs(){return{P:cg("P"),rate:cg("rate"),tenure:cg("tenure"),unit:cg("unit")||"y",method:cg("method")||"reducing",start:cg("start"),fee:cg("fee"),other:cg("other"),financed:cg("fin")=="1",extra:cg("extra"),partAmt:cg("partAmt"),partDate:cg("partDate"),partMode:cg("partMode")||"tenure",rounding:cg("rounding")||"nearest",rcDate:cg("rcDate"),rcRate:cg("rcRate")}}
+const gv=k=>($("#f_c_"+k)||{value:FV["f_c_"+k]||""}).value.trim();
+function emiIn(){return{P:gv("P"),rate:gv("rate"),tenure:gv("tenure"),unit:gv("unit")||"y",method:"reducing",start:gv("start")||today(),fee:gv("fee"),other:"",financed:false,extra:"",partAmt:"",partDate:"",partMode:"tenure",rounding:"nearest",rcDate:"",rcRate:""}}
+function liveCalc(){const b=$("#calcout");if(b)b.innerHTML=calcOut()}
+function emF(k,label,pre,ph,mode){return `<label class="em-l">${label}</label><div class="em-in"><span>${pre}</span><input id="f_c_${k}" inputmode="${mode||"decimal"}" placeholder="${ph}" oninput="liveCalc()"></div>`}
+function calcView(){return `<div class="em-top"><div class="em-k">LOANTRACK PRO</div><h3>Smart EMI Calculator</h3><div class="em-s">Plan your repayment with clarity</div></div>
+<div class="card em-card">${emF("P","Loan amount","₹","e.g. 10,00,000")}${emF("rate","Interest rate (per year)","%","e.g. 9.5")}
+<label class="em-l">Loan tenure</label><div class="em-in"><span>⏳</span><input id="f_c_tenure" inputmode="decimal" placeholder="e.g. 20" oninput="liveCalc()"><select id="f_c_unit" onchange="liveCalc()"><option value="y">Years</option><option value="m">Months</option></select></div>
+${emF("fee","Processing charges (optional)","₹","e.g. 5,000")}
+<label class="em-l">First EMI date</label><div class="em-in"><span>📅</span><input id="f_c_start" type="date" value="${today()}" oninput="liveCalc()"></div></div>
+<div id="calcout">${calcOut()}</div>`}
+function calcOut(){const o=emiIn();
+  if(!o.P||!o.rate||!o.tenure)return `<div class="em-empty">Enter loan amount, rate and tenure to see your EMI</div>`;
+  const r=calcLoan(o);if(r.err)return `<div class="em-empty" style="color:var(--bd)">${Object.values(r.err)[0]}</div>`;
+  const t=r.t,C=2*Math.PI*52,ia=C*t.interest/t.repayment,ip=Math.round(t.interest/t.repayment*100);
+  const ys={};r.rows.forEach(x=>{const y=x.due.slice(0,4),a=ys[y]=ys[y]||{p:0,i:0,c:0};a.p+=x.pr+x.ap;a.i+=x.int;a.c=x.close});
+  const yk=Object.keys(ys),mx=Math.max(...yk.map(y=>ys[y].p+ys[y].i));
+  const rows=a=>a.map(x=>`<tr><td>${x.i}</td><td>${x.due}</td><td>${mm(x.pay)}</td><td>${mm(x.int)}</td><td>${mm(x.pr)}</td><td>${mm(x.close)}</td></tr>`).join("");
+  return `<div class="em-hero"><div class="em-k">ESTIMATED MONTHLY EMI</div><div class="em-big">${mm(r.emi)}</div><div class="em-s">for ${r.n} months · reducing balance</div>
+  <div class="em-ring"><svg viewBox="0 0 120 120" width="132" height="132"><circle cx="60" cy="60" r="52" fill="none" stroke="#5b8fd6" stroke-width="12"/><circle cx="60" cy="60" r="52" fill="none" stroke="#d4af37" stroke-width="12" stroke-linecap="round" stroke-dasharray="${ia} ${C}" transform="rotate(-90 60 60)"/><text x="60" y="58" text-anchor="middle" fill="#fff" font-size="20" font-weight="700" font-family="Sora,sans-serif">${ip}%</text><text x="60" y="74" text-anchor="middle" fill="#c8d4ea" font-size="9">INTEREST</text></svg>
+  <div class="em-leg"><div><i style="background:#5b8fd6"></i>Principal<b>${mm(t.principal)}</b></div><div><i style="background:#d4af37"></i>Interest<b>${mm(t.interest)}</b></div></div></div></div>
+  <div class="em-grid"><div><span>Total payable</span><b>${mm(t.repayment)}</b></div><div><span>Processing charges</span><b>${mm(t.feesSeparate)}</b></div><div><span>Total cost</span><b>${mm(t.totalCost)}</b></div><div><span>Last EMI date</span><b>${t.payoff}</b></div></div>
+  <div class="card"><b class="em-h">Yearly split</b><div class="em-bars">${yk.map(y=>`<div><div class="em-col"><i style="height:${ys[y].i/mx*90}px;background:#d4af37"></i><i style="height:${ys[y].p/mx*90}px;background:#5b8fd6"></i></div><span>${y.slice(2)}</span></div>`).join("")}</div><div class="mu" style="font-size:11px"><span class="dot" style="background:#5b8fd6"></span>Principal <span class="dot" style="background:#d4af37;margin-left:8px"></span>Interest</div></div>
+  <details class="card"><summary class="em-h">Yearly summary</summary><div style="overflow-x:auto;font-size:12px"><table><tr><th>Year</th><th>Principal</th><th>Interest</th><th>Balance</th></tr>${yk.map(y=>`<tr><td>${y}</td><td>${mm(ys[y].p)}</td><td>${mm(ys[y].i)}</td><td>${mm(ys[y].c)}</td></tr>`).join("")}</table></div></details>
+  <details class="card"><summary class="em-h">Month-wise schedule</summary><div style="overflow-x:auto;font-size:12px"><table><tr><th>#</th><th>Due</th><th>EMI</th><th>Interest</th><th>Principal</th><th>Balance</th></tr>${rows(r.rows)}</table></div></details>
+  <div class="notice">Estimate only, not an official lender quotation. Actual repayments may differ due to lender conventions, payment dates, fees, taxes, insurance and rounding.</div>`}
+
+const STATES=["Andaman and Nicobar Islands","Andhra Pradesh","Arunachal Pradesh","Assam","Bihar","Chandigarh","Chhattisgarh","Dadra and Nagar Haveli and Daman and Diu","Delhi","Goa","Gujarat","Haryana","Himachal Pradesh","Jammu and Kashmir","Jharkhand","Karnataka","Kerala","Ladakh","Lakshadweep","Madhya Pradesh","Maharashtra","Manipur","Meghalaya","Mizoram","Nagaland","Odisha","Puducherry","Punjab","Rajasthan","Sikkim","Tamil Nadu","Telangana","Tripura","Uttar Pradesh","Uttarakhand","West Bengal"];
+const AT=["Vehicle","Property/Home","Business Asset","Machinery/Equipment","Gold/Other Secured Asset","Other"];
+const AF={"Vehicle":[["make","Make"],["model","Model"],["year","Year"]],"Property/Home":[["ptype","Property type"],["pcity","City"],["ploc","Locality"]],"Business Asset":[["acat","Asset category"],["buse","Business use"]],"Machinery/Equipment":[["ename","Equipment name"],["euse","Intended use"]]};
+const PIN_API="https://api.postalpincode.in/pincode/";
+const uniq=a=>[...new Set(a.filter(Boolean))];
+let pinT;
+function pinTyped(v){clearTimeout(pinT);const b=$("#pinbox");if(!v){b.textContent="";return}if(!/^[1-9]\d{5}$/.test(v)){b.textContent=v.length==6?"Enter a valid 6-digit PIN code.":"";return}b.textContent="Looking up…";pinT=setTimeout(()=>pinLookup(v),500)}
+async function pinLookup(pin){const b=$("#pinbox");if(!b||($("#f_pin")||{}).value!=pin)return;
+  try{const ac=new AbortController(),to=setTimeout(()=>ac.abort(),6000);const r=await fetch(PIN_API+pin,{signal:ac.signal});clearTimeout(to);const j=await r.json();
+    const po=j&&j[0]&&j[0].Status=="Success"?j[0].PostOffice:null;if(!po||!po.length){b.textContent="No post offices found for this PIN. Enter the address manually.";return}
+    pinRes=po.map(p=>({name:p.Name,district:p.District,state:p.State}));
+    b.innerHTML="Suggested localities (a PIN code does not identify a street address):"+pinRes.map((p,i)=>`<button class="b s" onclick="pickPO(${i})">${esc(p.name)} · ${esc(p.district)}, ${esc(p.state)}</button>`).join("")}
+  catch(e){b.textContent="PIN lookup unavailable. Enter locality, city and state manually."}}
+function pickPO(i){const p=pinRes[i];$("#f_area").value=p.name;$("#f_city").value=p.district;const s=STATES.find(x=>x.toLowerCase()==String(p.state).toLowerCase());if(s)$("#f_state").value=s;$("#pinbox").textContent="Filled from your selection. Please review and edit."}
+function cityPick(){const v=$("#f_city").value.trim().toLowerCase();const m=clients.find(c=>c.state&&(c.city||"").toLowerCase()==v);if(m&&!$("#f_state").value)$("#f_state").value=m.state}
+function condHTML(p,t){return (AF[t]||[]).map(([k,l])=>`<label class="mu">${l}</label><input id="${p}_x_${k}"${k=="year"?' inputmode="numeric"':""}>`).join("")}
+function assetForm(p){const t=FV[p+"_type"]||AT[0];return `<label class="mu">Asset type</label><select id="${p}_type" onchange="swapAF('${p}',this.value)">${AT.map(x=>`<option ${x==t?"selected":""}>${x}</option>`).join("")}</select><div id="${p}_cond">${condHTML(p,t)}</div><input id="${p}_name" placeholder="Asset name / description *"><input id="${p}_purpose" placeholder="Purchase / transaction purpose"><input id="${p}_value" inputmode="decimal" placeholder="Estimated asset value (₹)"><input id="${p}_aaddr" placeholder="Asset address (if applicable)"><input id="${p}_aref" placeholder="Asset reference no. (only if necessary)"><textarea id="${p}_notes" rows="2" placeholder="Asset notes (optional)"></textarea><div class="notice">Estimated value is user-entered. It is not an official valuation, collateral value or eligibility result, and is kept separate from requested, approved and disbursed amounts.</div>`}
+function swapAF(p,t){FV[p+"_type"]=t;$("#"+p+"_cond").innerHTML=condHTML(p,t)}
+function readAsset(p){const g=k=>($("#"+p+"_"+k)||{value:""}).value.trim(),t=g("type"),x={};(AF[t]||[]).forEach(([k])=>x[k]=g("x_"+k));
+  let err="";const v=g("value");if(!g("name"))err="Asset name / description is required.";else if(v!==""&&!(Number(v)>=0))err="Asset value must be a non-negative number.";else if(x.year&&!(/^\d{4}$/.test(x.year)&&x.year>=1950&&x.year<=new Date().getFullYear()+1))err="Enter a valid vehicle year.";
+  return{err,a:{type:t,name:g("name"),purpose:g("purpose"),value:v===""?null:Number(v),addr:g("aaddr"),ref:g("aref"),notes:g("notes"),x}}}
+function logAudit(act,cid,note){db.collection("audit").doc("A"+Date.now().toString(36)+Math.random().toString(36).slice(2,5)).set({act,cid,by:me||"",at:new Date().toISOString(),note:note||""}).catch(()=>{})}
+function addDraft(){const r=readAsset("f_a");if(r.err){toast=r.err;render();return}draft.push(r.a);Object.keys(FV).filter(k=>k.startsWith("f_a_")).forEach(k=>delete FV[k]);render()}
+function rmDraft(i){draft.splice(i,1);render()}
+function assetLine(a){return `<b>${a.type}</b> — ${esc(a.name)}${a.value!=null?" · est. "+money(a.value):""}${a.purpose?"<br>Purpose: "+esc(a.purpose):""}<br>${Object.entries(a.x||{}).filter(([,v])=>v).map(([k,v])=>k+": "+esc(v)).join(", ")}`}
+function addrAssets(c){const vis=canAll||c.owner===me;
+  return `<div class="card"><b>Address</b><div class="mu">${vis?[c.village,c.city].filter(Boolean).map(esc).join(", ")||"Not entered":esc(c.city||"")+" (village restricted)"}</div></div>
+  <div class="card"><b>Loan assets</b>${(c.assets||[]).map((a,i)=>`<div class="mu" style="margin:8px 0">${assetLine(a)}${vis&&a.addr?"<br>Asset address: "+esc(a.addr):""}${vis&&a.ref?"<br>Ref: "+esc(a.ref):""}${vis?` <a style="color:var(--nv)" onclick="editAsset('${c.id}',${i})">Edit</a>`:""}${isAdmin?` <a style="color:var(--bd)" onclick="rmAsset('${c.id}',${i})">${arm=="rm"+i?"Confirm remove":"Remove"}</a>`:""}</div>`).join("")||'<p class="mu">No assets recorded.</p>'}
+  ${vis?`<b>${ei==null?"Add asset":"Edit asset"}</b>${assetForm("d_a")}<button class="b s" onclick="saveAsset('${c.id}')">${ei==null?"Add asset":"Save asset changes"}</button>`:""}</div>`}
+function editAsset(cid,i){const a=clients.find(x=>x.id==cid).assets[i],p="d_a";FV={};FV[p+"_type"]=a.type;FV[p+"_name"]=a.name;FV[p+"_purpose"]=a.purpose||"";FV[p+"_value"]=a.value??"";FV[p+"_aaddr"]=a.addr||"";FV[p+"_aref"]=a.ref||"";FV[p+"_notes"]=a.notes||"";Object.entries(a.x||{}).forEach(([k,v])=>FV[p+"_x_"+k]=v);ei=i;skipCap=true;render()}
+async function saveAsset(cid){const c=clients.find(x=>x.id==cid);if(!(canAll||c.owner===me))return;const r=readAsset("d_a");if(r.err){toast=r.err;render();return}
+  const arr=[...(c.assets||[])];if(ei==null)arr.push(r.a);else arr[ei]={...arr[ei],...r.a};
+  try{await db.collection("clients").doc(cid).update({assets:arr});logAudit(ei==null?"asset.create":"asset.update",cid,r.a.type);toast="Asset saved.";ei=null;FV={}}catch(e){toast="Save failed: "+e.message}render()}
+async function rmAsset(cid,i){if(arm!="rm"+i){arm="rm"+i;render();return}arm=null;const c=clients.find(x=>x.id==cid),arr=[...c.assets];arr.splice(i,1);await db.collection("clients").doc(cid).update({assets:arr});logAudit("asset.delete",cid,"");render()}
+async function saveClient(){
+  const v=id=>$("#"+id).value.trim();errs={};
+  const name=v("f_name"),ref=v("f_ref"),mob=v("f_mobile"),amt=Number(v("f_amt")),d=v("f_date");
+  if(!name)errs.name="Client name is required.";
+  if(!(amt>0))errs.amount="Enter a positive amount.";
+  if(mob&&!/^[6-9]\d{9}$/.test(mob))errs.mobile="Enter a valid 10-digit mobile number.";
+  if(!d||isNaN(new Date(d)))errs.date="Enter a valid date.";
+  if(ref&&rawC.some(c=>c.ref==ref))errs.ref="This reference already exists.";
+  
+  const dup=rawC.find(c=>c.name.toLowerCase()==name.toLowerCase()&&(!mob||c.mobile==mob));
+  if(dup&&!errs.name&&!window._dupOk){errs.name="Similar client exists. Tap Save again to confirm.";window._dupOk=true}else if(!dup)window._dupOk=false;
+  if(Object.keys(errs).length){render();return}
+  const id="C"+Date.now().toString(36).toUpperCase(),now=new Date().toISOString();
+  const rec={name,ref,mobile:mob,village:v("f_village"),city:v("f_city"),assets:draft,loanType:$("#f_lt").value,amount:amt,appDate:d,source:$("#f_src").value,priority:$("#f_pri").value,status:"New Lead",notes:v("f_notes"),owner:me||"",created:now,history:[{from:"—",to:"New Lead",at:now,by:me||"",note:"Client created",next:""}]};
+  try{await db.collection("clients").doc(id).set(rec);
+    const fu=v("f_fu");if(fu)await db.collection("tasks").doc("T"+Date.now().toString(36)).set({cid:id,name,date:fu,type:"Call",status:"Pending",note:"Initial follow-up"});
+    window._dupOk=false;logAudit("client.create",id,"");draft.forEach(a=>logAudit("asset.create",id,a.type));draft=[];FV={};toast="Saved "+id;sel=id;tab="clients"}catch(e){toast="Save failed: "+e.message}
+  render()}
+function detail(){
+  const c=clients.find(x=>x.id==sel);if(!c)return"";
+  const ts=tasks.filter(t=>t.cid==c.id);
+  return `<button class="b s" onclick="sel=null;render()">← Back</button>
+  <div class="card"><b>${esc(c.name)}</b>${c.demo?'<span class="demo">DEMO</span>':""}<div class="mu">ID ${c.id} · Ref ${esc(c.ref)||"—"}</div><div class="mu">${c.loanType} · ${money(c.amount)} · ${c.priority} priority</div><div class="mu">Mobile ${mask(c.mobile)} · ${esc(c.city)||"—"}</div><div class="mu">${esc(c.notes)}</div><p><span class="tag ${col(c.status)}">${c.status}</span></p></div>
+  ${addrAssets(c)}<div class="card"><b>Update status</b><select id="u_st">${ST.map(s=>`<option ${s==c.status?"selected":""}>${s}</option>`).join("")}</select><input id="u_note" placeholder="Reason / notes *"><input id="u_next" placeholder="Next action"><input id="u_fu" type="date"><div class="notice">${NOTE}</div><button class="b" onclick="upStatus('${c.id}')">Save status</button></div>
+  <div class="card"><b>Follow-ups</b>${ts.map(t=>`<div class="row"><span>${t.date} · ${esc(t.note)}</span><span class="${t.status=="Completed"?"ok":"wn"}">${t.status}</span></div>`).join("")||'<p class="mu">None.</p>'}<input id="t_date" type="date"><input id="t_note" placeholder="Note"><select id="t_type"><option>Call</option><option>Meeting</option><option>Email</option><option>Other</option></select><button class="b s" onclick="addTask('${c.id}')">Add follow-up</button></div>
+  <div class="card"><b>History (append-only)</b>${[...c.history].reverse().map(h=>`<div class="mu" style="margin:6px 0">${new Date(h.at).toLocaleString()} · ${h.from} → <b>${h.to}</b><br>${esc(h.note)}${h.next?" · Next: "+esc(h.next):""}</div>`).join("")}</div>
+  ${isAdmin?`<button class="b s" onclick="archive('${c.id}')">${arm==c.id?"Tap again to confirm archive":"Archive client"}</button>`:""}`}
+async function upStatus(id){
+  const c=clients.find(x=>x.id==id),to=$("#u_st").value,note=$("#u_note").value.trim();
+  if(!note){toast="A reason or note is required.";render();return}
+  if(to==c.status){toast="Status unchanged.";render();return}
+  const h=[...c.history,{from:c.status,to,at:new Date().toISOString(),by:me||"",note,next:$("#u_next").value.trim()}];
+  try{await db.collection("clients").doc(id).update({status:to,history:h});
+    const fu=$("#u_fu").value;if(fu)await db.collection("tasks").doc("T"+Date.now().toString(36)).set({cid:id,name:c.name,date:fu,type:"Call",status:"Pending",note:note});
+    toast="Status updated."}catch(e){toast="Failed: "+e.message}render()}
+async function addTask(id){
+  const c=clients.find(x=>x.id==id),d=$("#t_date").value;if(!d){toast="Pick a date.";render();return}
+  if(tasks.some(t=>t.cid==id&&t.date==d&&t.status=="Pending")){toast="A pending follow-up already exists for that date.";render();return}
+  await db.collection("tasks").doc("T"+Date.now().toString(36)).set({cid:id,name:c.name,date:d,type:$("#t_type").value,status:"Pending",note:$("#t_note").value});toast="Follow-up added.";render()}
+async function archive(id){if(arm!=id){arm=id;render();return}arm=null;await db.collection("clients").doc(id).update({archived:true});sel=null;render()}
+async function setTask(id,s){if(s=="Rescheduled"){const d=$("#r_"+id).value;if(!d)return;resch=null;await db.collection("tasks").doc(id).update({date:d,status:"Pending"})}else await db.collection("tasks").doc(id).update({status:s})}
+function fups(){
+  const t=today(),P=tasks.filter(x=>x.status=="Pending").sort((a,b)=>a.date.localeCompare(b.date));
+  const g=[["Overdue",P.filter(x=>x.date<t),"bd"],["Today",P.filter(x=>x.date==t),"wn"],["Upcoming",P.filter(x=>x.date>t),""],["Completed",tasks.filter(x=>x.status=="Completed").slice(0,10),"ok"]];
+  return g.map(([n,L,k])=>`<h4 class="${k}">${n} (${L.length})</h4>${L.map(x=>`<div class="card"><b>${esc(x.name)}</b> <span class="mu">${x.type} · ${x.date}</span><div class="mu">${esc(x.note)}</div>${x.status=="Pending"?`<div class="grid"><button class="b" onclick="setTask('${x.id}','Completed')">Done</button><button class="b s" onclick="resch='${x.id}';render()">Reschedule</button></div>${resch==x.id?`<input id="r_${x.id}" type="date"><button class="b" onclick="setTask('${x.id}','Rescheduled')">Save new date</button>`:""}`:""}</div>`).join("")||'<p class="mu">Nothing here.</p>'}`).join("")}
+const RL={ADMIN:"Admin",MANAGER:"Manager",EMPLOYEE:"Employee"};
+let auditL=[],rpId=null,lgMsg="";
+const okMob=m=>/^[6-9]\d{9}$/.test(m);
+async function loadStaff(){const {data,error}=await sb.from("profiles").select("id,name,mobile,role,active");if(!error&&data)staff=data}
+async function loadAudit(){if(!canAll){auditL=[];return}const {data}=await sb.from("docs").select("data").eq("collection","audit").order("created_at",{ascending:false}).limit(10);auditL=(data||[]).map(r=>r.data)}
+async function syncSession(session){window.stL=true;
+  if(session){await loadStaff();const u=staff.find(x=>x.id==session.user.id);
+    if(u&&u.active){if(sess!=u.id)enter(u);await loadAudit()}
+    else{lgMsg=u?"This account is deactivated. Contact your admin.":"No profile found for this account. Contact your admin.";await sb.auth.signOut();return}
+  }else{sess=null;me=null;isAdmin=false;canAll=false;staff=[];$("#who").textContent="";renderLogin(true);return}
+  render()}
+function watchStaff(){sb.auth.onAuthStateChange((ev,session)=>{setTimeout(()=>syncSession(session),0)})}
+function enter(u){sess=u.id;me=u.id;isAdmin=u.role=="ADMIN";canAll=u.role!="EMPLOYEE";$("#who").textContent=u.name+" · "+RL[u.role];lgMsg="";tab="home"}
+async function doLogout(){if(me)logAudit("logout","","");FV={};tab="home";sel=null;await sb.auth.signOut()}
+function renderLogin(force){if(!window.stL){$("#app").innerHTML='<p class="mu">Loading…</p>';return}if($("#lg")&&!force)return;$("#nav").innerHTML="";$("#bell").innerHTML="";$("#bk").innerHTML="";
+  const inp=(id,ic,ph,t)=>`<div class="em-in"><span>${ic}</span><input id="${id}" ${t?`type="${t}"`:'inputmode="numeric"'} placeholder="${ph}" autocomplete="off"></div>`;
+  $("#app").innerHTML=`<div id="lg"><div class="em-top" style="margin-top:6vh"><div class="em-k">LOANTRACK PRO</div><h3>Welcome back</h3><div class="em-s">Sign in with your registered mobile number</div></div><div class="card em-card"><label class="em-l">Mobile number</label>${inp("lg_mob","📱","10-digit mobile")}<label class="em-l">Passcode</label>${inp("lg_pw","🔒","Passcode","password")}<div id="lgErr" class="err" style="margin:8px 0">${esc(lgMsg)}</div><button id="lgBtn" class="b" onclick="doLogin()">Sign in</button><div class="notice">Accounts are created by your administrator. Never share your passcode.</div></div></div>`}
+async function doLogin(){const m=$("#lg_mob").value.trim(),pw=$("#lg_pw").value,er=$("#lgErr"),b=$("#lgBtn");lgMsg="";
+  if(!okMob(m)||!pw){er.textContent="Enter your 10-digit mobile number and passcode.";return}
+  b.disabled=true;const {error}=await sb.auth.signInWithPassword({email:m+"@loantrack.app",password:pw});
+  if(error){er.textContent="Invalid mobile number or passcode.";b.disabled=false}}
+async function fnCall(body){const {data,error}=await sb.functions.invoke("admin-users",{body});return error?{error:error.message}:data}
+async function addStaff(){if(!isAdmin)return;const g=k=>($("#f_s_"+k)||{value:""}).value,name=g("name").trim(),mob=g("mob").trim(),pw=g("pw"),role=g("role")||"EMPLOYEE";
+  if(name.length<2)toast="Enter a full name (min 2 characters).";else if(staff.some(x=>x.name.toLowerCase()==name.toLowerCase()))toast="This name is already used. Names must be unique.";
+  else if(!okMob(mob))toast="Enter a valid 10-digit mobile number.";else if(staff.some(x=>x.mobile==mob))toast="This mobile number is already registered.";else if(pw.length<8)toast="Passcode must be at least 8 characters.";
+  else{const r=await fnCall({action:"create",name,mobile:mob,passcode:pw,role});if(r.error)toast=r.error;else{toast="User added: "+name;FV={};logAudit("user.create","",name+" ("+role+")");await loadStaff()}}
+  render()}
+async function toggleStaff(id){if(!isAdmin)return;const u=staff.find(x=>x.id==id);if(id==me){toast="You cannot deactivate your own account.";render();return}
+  const {error}=await sb.from("profiles").update({active:!u.active}).eq("id",id);if(error)toast=error.message;else{logAudit(u.active?"user.deactivate":"user.activate","",u.name);await loadStaff()}render()}
+async function setRole(id,role){if(!isAdmin)return;const u=staff.find(x=>x.id==id);
+  if(u.role=="ADMIN"&&role!="ADMIN"&&staff.filter(x=>x.role=="ADMIN"&&x.active).length<2){toast="At least one active admin is required.";render();return}
+  const {error}=await sb.from("profiles").update({role}).eq("id",id);if(error)toast=error.message;else{logAudit("user.role","",u.name+" → "+role);await loadStaff();if(id==me)enter({...u,role})}render()}
+async function resetPw(id){if(!isAdmin)return;if(rpId!=id){rpId=id;render();return}const np=($("#f_s_np")||{value:""}).value;
+  if(np.length<8){toast="Passcode must be at least 8 characters.";render();return}
+  const r=await fnCall({action:"reset",id,passcode:np});if(r.error)toast=r.error;else{rpId=null;FV={};logAudit("user.reset_passcode","",staff.find(x=>x.id==id).name);toast="Passcode updated."}render()}
+
+function adminPanel(){return `<div class="card em-card"><b class="em-h">User management</b><div class="notice">Add team members. Name and mobile number must be unique.</div>
+  <input id="f_s_name" placeholder="Full name (unique) *"><input id="f_s_mob" inputmode="numeric" maxlength="10" placeholder="Mobile number (unique) *"><select id="f_s_role"><option value="EMPLOYEE">Employee</option><option value="MANAGER">Manager</option><option value="ADMIN">Admin</option></select><input id="f_s_pw" type="password" placeholder="Set passcode (min 8) *"><button class="b" onclick="addStaff()">Add user</button></div>
+  <div class="card"><b class="em-h">Team (${staff.length})</b>${staff.map(u=>`<div style="padding:10px 0;border-bottom:1px solid var(--ln)"><div class="row"><b>${esc(u.name)}${u.id==me?" (you)":""}</b><span class="tag ${u.active?"ok":"bd"}">${u.active?"Active":"Inactive"}</span></div><div class="mu">${mask(u.mobile)}</div>
+  <div class="grid" style="margin-top:6px"><select onchange="setRole('${u.id}',this.value)" style="margin:0">${Object.entries(RL).map(([k,v])=>`<option value="${k}" ${u.role==k?"selected":""}>${v}</option>`).join("")}</select><button class="b s" style="margin:0" onclick="toggleStaff('${u.id}')">${u.active?"Deactivate":"Activate"}</button></div>
+  ${rpId==u.id?`<input id="f_s_np" type="password" placeholder="New passcode (min 8)">`:""}<button class="b s" onclick="resetPw('${u.id}')">${rpId==u.id?"Save new passcode":"Reset passcode"}</button></div>`).join("")}</div>
+  <div class="card"><b class="em-h">Recent activity (audit)</b>${auditL.map(a=>`<div class="mu" style="margin:5px 0">${new Date(a.at).toLocaleString()} · <b>${esc(a.act)}</b> ${esc(a.note||"")}</div>`).join("")||'<p class="mu">No activity yet.</p>'}</div>`}
+function profile(){const u=staff.find(x=>x.id==sess)||{};
+  return `<div class="em-top"><div class="em-k">SIGNED IN</div><h3>${esc(u.name)}</h3><div class="em-s">${RL[u.role]||""} · ${mask(u.mobile)}</div></div>
+  <div class="card"><button class="b s" onclick="doLogout()">Log out</button></div>${isAdmin?adminPanel():""}
+  <div class="card"><b>Security note</b><div class="mu">This is a prototype sign-in. Accounts and hashed passcodes live in the app database and the checks run in the page, so they are not a substitute for server-side authentication. Use Supabase Auth with row-level security for production, and do not enter real customer data here.</div></div>`}
+
+const CUS=["New","Query Received","Documents Pending","Loan/Application in Process","Approved","Invoice Pending","Insurance Pending","RTO Booklet Pending","Completed","Rejected / Cancelled"];
+const DST=["Pending","In Process","Completed","Not Applicable"];
+const DK=[["inv","Invoice","Invoice no."],["ins","Insurance","Policy no."],["rto","RTO Booklet","Reference no."]];
+const CITIES=["Mehsana","Vishnagar","Palanpur","Patan","Mumbai","Delhi","Bengaluru","Hyderabad","Ahmedabad","Chennai","Kolkata","Pune","Surat","Jaipur","Lucknow","Kanpur","Nagpur","Indore","Thane","Bhopal","Visakhapatnam","Patna","Vadodara","Ghaziabad","Ludhiana","Agra","Nashik","Faridabad","Meerut","Rajkot","Varanasi","Srinagar","Aurangabad","Dhanbad","Amritsar","Navi Mumbai","Allahabad","Ranchi","Howrah","Coimbatore","Jabalpur","Gwalior","Vijayawada","Jodhpur","Madurai","Raipur","Kota","Guwahati","Chandigarh","Solapur","Mysuru","Kochi","Thiruvananthapuram","Bhubaneswar","Noida","Gurugram","Dehradun","Jalandhar","Udaipur"];
+let rawCU=[],dealerL=[],showL=[],cuCfg={stages:null,dup:"name_dealer"},cuv="list",cusel=null,cuEdit=null,cuErr={},cuDupOk=false,cdoc={inv:null,ins:null,rto:null},pwOpen=null,CA=null,CD=null,cuBusy="";
+let CF={q:"",from:"",to:"",dealer:"",show:"",stage:"",city:"",inv:"",ins:"",rto:"",sort:"new"};
+const STG=()=>cuCfg.stages&&cuCfg.stages.length?cuCfg.stages:CUS;
+const snm=id=>(staff.find(x=>x.id==id)||{}).name||"—";
+const cbc=s=>/Completed|Approved/.test(s)?"cb-g":/Reject|Cancel/.test(s)?"cb-r":/Pending|New|Query/.test(s)?"cb-a":/Process/.test(s)?"cb-b":"cb-n";
+const cuVis=()=>rawCU.filter(c=>canAll||c.owner===me||(c.fups||[]).some(f=>f.who===me));
+const cuCanEdit=c=>canAll||c.owner===me;
+const pend=c=>DK.filter(([k])=>c[k]&&["Pending","In Process"].includes(c[k].st));
+const openFU=c=>(c.fups||[]).filter(f=>!f.done).sort((a,b)=>a.date.localeCompare(b.date));
+const isOver=c=>{const f=openFU(c)[0];return !!f&&f.date<today()&&pend(c).length>0};
+function watchCust(){const R=()=>{if(sess)render(true)};
+  db.collection("customers").onSnapshot(s=>{rawCU=s.docs.map(d=>({id:d.id,...d.data()}));R()},()=>{});
+  db.collection("dealers").onSnapshot(s=>{dealerL=s.docs.map(d=>({id:d.id,...d.data()}));R()},()=>{});
+  db.collection("showrooms").onSnapshot(s=>{showL=s.docs.map(d=>({id:d.id,...d.data()}));R()},()=>{});
+  db.collection("config").onSnapshot(s=>{const d=s.docs.find(x=>x.id=="customer");if(d)cuCfg={...cuCfg,...d.data()};R()},()=>{});
+  claude.use("assets").then(a=>{CA=a;R()}).catch(()=>{});claude.use("downloads").then(a=>{CD=a}).catch(()=>{})}
+function cuFiltered(){let L=cuVis();const q=CF.q.toLowerCase();
+  L=L.filter(c=>(!q||[c.name,c.cid,c.dealer,c.showroom,c.city].join(" ").toLowerCase().includes(q))&&(!CF.from||c.date>=CF.from)&&(!CF.to||c.date<=CF.to)&&(!CF.dealer||c.dealer==CF.dealer)&&(!CF.show||c.showroom==CF.show)&&(!CF.stage||c.stage==CF.stage)&&(!CF.city||(c.city||"").toLowerCase().includes(CF.city.toLowerCase()))&&(!CF.inv||c.inv.st==CF.inv)&&(!CF.ins||c.ins.st==CF.ins)&&(!CF.rto||c.rto.st==CF.rto));
+  const sc=c=>pend(c).length+(isOver(c)?3:0);
+  return L.sort(CF.sort=="pending"?(a,b)=>sc(b)-sc(a)||b.date.localeCompare(a.date):(a,b)=>b.date.localeCompare(a.date)||(b.created||"").localeCompare(a.created||""))}
+const chips=c=>DK.map(([k,l])=>`<span class="cb ${cbc(c[k].st)}">${k=="rto"?"RTO":l.slice(0,3)}: ${c[k].st}</span>`).join("");
+function cuListHTML(){const L=cuFiltered();
+  return `<div class="mu" style="margin:6px 0">${L.length} customer${L.length==1?"":"s"}</div>`+(L.slice(0,100).map(c=>`<div class="card cu" onclick="cuPrev='list';cusel='${c.id}';cuv='detail';render()"><div class="row"><b>${esc(c.name)}</b><span class="cb ${cbc(c.stage)}">${esc(c.stage)}</span></div><div class="mu">${c.cid} · ${c.date}</div><div class="mu">🏢 ${esc(c.dealer||"—")} · ${esc(c.showroom||"—")}</div><div class="mu">📍 ${esc(c.city||"—")}</div><div class="cbr">${chips(c)}</div></div>`).join("")||'<div class="em-empty">No customers found. Tap “+ Add” to create the first record.</div>')}
+function cuLive(){const b=$("#cl");if(b)b.innerHTML=cuListHTML()}
+function cfSel(k,label,opts){return `<select id="c_${k}" onchange="CF.${k}=this.value;cuLive()" aria-label="${label}"><option value="">${label}: All</option>${opts.map(o=>`<option ${CF[k]==o?"selected":""}>${esc(o)}</option>`).join("")}</select>`}
+function custTab(){
+  const seg=[["list","Customers"],["pending","Pending"],["cross","Cross Sell"],["form","+ Add"]].map(([k,l])=>`<button class="b ${cuv==k||(cuv=="detail"&&k=="list")?"":"s"}" style="margin:0" onclick="${k=="form"?"cuNew()":`cuv='${k}';cusel=null;render()`}">${l}</button>`).join("");
+  const top=`<div class="em-top"><div class="em-k">LOANTRACK PRO</div><h3>Customer &amp; Dealer Tracking</h3><div class="em-s">Invoice · Insurance · RTO booklet follow-through</div></div><div class="cu-seg">${seg}</div>`;
+  const bkb='<button class="b s" onclick="goBack()">← Back</button>';
+  if(cuv=="form")return top+bkb+cuForm();
+  if(cuv=="detail"&&cusel)return top+cuDetail();
+  if(cuv=="pending")return top+bkb+cuPending();
+  if(cuv=="cross")return top+bkb+cuCross();
+  const V=cuVis(),n=f=>V.filter(f).length;
+  const kp=[["👥","Total Customers",V.length,"#5b8fd6",""],["✨","New Queries",n(c=>["New","Query Received"].includes(c.stage)),"#2f80ed",""],["⚙️","In Process",n(c=>c.stage=="Loan/Application in Process"),"#14b8a6",""],["🧾","Invoice Pending",n(c=>c.inv.st=="Pending"),"#d4a017","CF.inv='Pending'"],["🛡️","Insurance Pending",n(c=>c.ins.st=="Pending"),"#f2994a","CF.ins='Pending'"],["📘","RTO Pending",n(c=>c.rto.st=="Pending"),"#eb5757","CF.rto='Pending'"],["✅","Completed",n(c=>c.stage=="Completed"),"#27ae60",""]];
+  const dn=dealerL.map(d=>d.name).sort(),sn=uniq(showL.map(s=>s.name)).sort();
+  return top+`<div class="hm-kp">${kp.map(([i,l,v,k,a])=>`<div style="border-top:3px solid ${k}" ${a?`onclick="${a};render()"`:""}><span>${i}</span><b>${v}</b><small>${l}</small></div>`).join("")}</div>
+  <input id="c_q" placeholder="🔍 Search name, ID, dealer, showroom, city" value="${esc(CF.q)}" oninput="CF.q=this.value;cuLive()">
+  <details class="card"><summary class="em-h">Filters &amp; sorting</summary>
+  <div class="grid"><div><label class="mu">From</label><input id="c_from" type="date" value="${CF.from}" onchange="CF.from=this.value;cuLive()"></div><div><label class="mu">To</label><input id="c_to" type="date" value="${CF.to}" onchange="CF.to=this.value;cuLive()"></div></div>
+  ${cfSel("dealer","Dealer",dn)}${cfSel("show","Showroom",sn)}${cfSel("stage","Stage",STG())}<input id="c_city" placeholder="City / location" value="${esc(CF.city)}" oninput="CF.city=this.value;cuLive()">
+  ${cfSel("inv","Invoice",DST)}${cfSel("ins","Insurance",DST)}${cfSel("rto","RTO booklet",DST)}
+  <select id="c_sort" onchange="CF.sort=this.value;cuLive()"><option value="new" ${CF.sort=="new"?"selected":""}>Sort: Newest date</option><option value="pending" ${CF.sort=="pending"?"selected":""}>Sort: Pending priority</option></select>
+  <button class="b s" onclick="CF={q:'',from:'',to:'',dealer:'',show:'',stage:'',city:'',inv:'',ins:'',rto:'',sort:'new'};render()">Clear filters</button></details>
+  <div class="grid" style="margin-bottom:8px"><button class="b s" style="margin:0" onclick="cuExport('csv')">⬇ Excel / CSV</button><button class="b s" style="margin:0" onclick="cuExport('pdf')">⬇ PDF list</button></div>
+  <div id="cl">${cuListHTML()}</div>${isAdmin?cuConfig():""}`}
+function cuF(k,label,html){return `<label class="em-l">${label}</label>${html}${cuErr[k]?`<div class="err">${cuErr[k]}</div>`:""}`}
+function cuNew(){cuNextId=genCid();FV={};cdoc={inv:null,ins:null,rto:null};cuEdit=null;cuErr={};cuDupOk=false;cuv="form";render()}
+function cuEditStart(id){const c=rawCU.find(x=>x.id==id);if(!c||!cuCanEdit(c))return;FV={};const s=(k,v)=>FV["f_cu_"+k]=v||"";
+  s("date",c.date);s("name",c.name);s("dealer",c.dealer);s("show",c.showroom);s("stage",c.stage);s("query",c.query);s("reason",c.reason);s("city",c.city);s("addr",c.address);
+  DK.forEach(([k])=>{s(k+"_st",c[k].st);s(k+"_no",c[k].no);s(k+"_dt",c[k].dt);cdoc[k]=c[k].doc||null});cuEdit=id;cuErr={};cuv="form";skipCap=true;render()}
+function dlShow(){const d=(($("#f_cu_dealer")||{}).value||FV.f_cu_dealer||"").trim().toLowerCase();return showL.filter(s=>!d||!s.dealer||s.dealer.toLowerCase()==d).map(s=>`<option value="${esc(s.name)}">`).join("")}
+function cuDealerChg(){const e=$("#dl_show");if(e)e.innerHTML=dlShow()}
+function docBlock(k,l,nl){const d=cdoc[k];return `<div class="card" style="margin:8px 0"><b>${l}</b><select id="f_cu_${k}_st">${DST.map(s=>`<option>${s}</option>`).join("")}</select><input id="f_cu_${k}_no" placeholder="${nl} (optional)"><label class="mu">Date (optional)</label><input id="f_cu_${k}_dt" type="date">${cuErr[k]?`<div class="err">${cuErr[k]}</div>`:""}
+  ${d?`<div class="row" style="align-items:center"><a href="#" onclick="openDoc('${esc(d.id)}');return false" style="color:var(--nv)">📎 ${esc(d.name)}</a><a style="color:var(--bd)" onclick="cdoc['${k}']=null;render()">Remove</a></div>`:CA?`<label class="mu">Document (PDF or image, optional)</label><input id="d_cu_file_${k}" type="file" accept="application/pdf,image/*" onchange="cuUp('${k}',this)">${cuBusy==k?'<div class="mu">Uploading…</div>':""}`:'<div class="notice">Document upload is available to editors in this view.</div>'}</div>`}
+async function cuUp(k,el){const f=el.files&&el.files[0];if(!f)return;if(!(/^image\//.test(f.type)||f.type=="application/pdf")){toast="Only PDF or image files are allowed.";render();return}
+  if(f.size>10*1048576){toast="File is larger than 10 MB.";render();return}cuBusy=k;render();
+  try{const r=await CA.upload(f);cdoc[k]={id:r.id,url:r.url,name:f.name}}catch(e){toast="Upload failed: "+(e.message||e.code)}cuBusy="";render()}
+function cuForm(){const ex=cuEdit?rawCU.find(x=>x.id==cuEdit):null;
+  const cities=uniq([...CITIES,...rawCU.map(c=>c.city)]).sort();
+  return `<div class="card em-card"><b class="em-h">${ex?"Edit customer":"Add customer"}</b>
+  <label class="em-l">Customer ID (auto-generated)</label><div class="em-in"><span>🆔</span><input id="cu_id" readonly value="${ex?ex.cid:cuNextId}" style="font-weight:700;letter-spacing:.04em"></div>
+  ${cuF("date","Date",`<input id="f_cu_date" type="date" value="${today()}">`)}${cuF("name","Customer name *",'<input id="f_cu_name" placeholder="Full name">')}
+  ${cuF("dealer","Dealer",`<input id="f_cu_dealer" list="dl_dealer" placeholder="Search or type dealer" oninput="cuDealerChg()" onchange="cuDealerPick()"><datalist id="dl_dealer">${dealerL.map(d=>`<option value="${esc(d.name)}">`).join("")}</datalist><a class="mu" style="color:var(--nv)" onclick="cuAddDealer()">＋ Add as new dealer</a>`)}
+  ${cuF("show","Showroom",`<input id="f_cu_show" list="dl_show" placeholder="Search or type showroom" onchange="cuShowPick()"><datalist id="dl_show">${dlShow()}</datalist><a class="mu" style="color:var(--nv)" onclick="cuAddShow()">＋ Add as new showroom</a>`)}
+  ${cuF("stage","Stage",`<select id="f_cu_stage">${STG().map(s=>`<option>${esc(s)}</option>`).join("")}</select>`)}
+  ${cuF("query","Query / requirement",'<textarea id="f_cu_query" rows="2"></textarea>')}${cuF("reason","Reason (delay, pending, rejection or follow-up)",'<textarea id="f_cu_reason" rows="2"></textarea>')}
+  ${cuF("city","Location (city)",`<input id="f_cu_city" list="dl_city2" placeholder="Search city or type manually" oninput="plDeb()" onchange="cuCityPick()"><datalist id="dl_city2">${cities.map(c=>`<option value="${esc(c)}">`).join("")}</datalist>`)}<div id="plbox">${plHTML()}</div>${cuF("addr","Address",'<textarea id="f_cu_addr" rows="2" placeholder="Enter address manually"></textarea>')}
+  ${DK.map(([k,l,n])=>docBlock(k,l,n)).join("")}
+  <button class="b" onclick="cuSave()">${ex?"Save changes":"Save customer"}</button><button class="b s" onclick="cuv=cuEdit?'detail':'list';cuEdit=null;FV={};render()">Cancel</button></div>`}
+async function cuAddDealer(){const n=($("#f_cu_dealer")||{value:""}).value.trim();if(n.length<2){toast="Type the dealer name first.";render();return}
+  if(dealerL.some(d=>d.name.toLowerCase()==n.toLowerCase())){toast="Dealer already exists.";render();return}
+  await db.collection("dealers").doc("D"+Date.now().toString(36)).set({name:n,created:new Date().toISOString(),by:me||""});logAudit("dealer.create","",n);toast="Dealer added: "+n;render()}
+async function cuAddShow(){const n=($("#f_cu_show")||{value:""}).value.trim(),d=($("#f_cu_dealer")||{value:""}).value.trim();if(n.length<2){toast="Type the showroom name first.";render();return}
+  if(showL.some(s=>s.name.toLowerCase()==n.toLowerCase()&&(s.dealer||"").toLowerCase()==d.toLowerCase())){toast="Showroom already exists.";render();return}
+  await db.collection("showrooms").doc("S"+Date.now().toString(36)).set({name:n,dealer:d,city:($("#f_cu_city")||{value:""}).value.trim(),address:($("#f_cu_addr")||{value:""}).value.trim(),created:new Date().toISOString(),by:me||""});logAudit("showroom.create","",n);toast="Showroom added: "+n;render()}
+async function cuSave(){const g=k=>($("#f_cu_"+k)||{value:""}).value.trim();cuErr={};
+  const name=g("name"),date=g("date"),dealer=g("dealer"),show=g("show"),city=g("city");
+  if(!name)cuErr.name="Customer name is required.";if(!okD(date))cuErr.date="Enter a valid date.";
+  if(dealer&&!dealerL.some(d=>d.name.toLowerCase()==dealer.toLowerCase()))cuErr.dealer="Pick an existing dealer or tap “Add as new dealer”.";
+  if(show&&!showL.some(s=>s.name.toLowerCase()==show.toLowerCase()))cuErr.show="Pick an existing showroom or tap “Add as new showroom”.";
+  const docs={};DK.forEach(([k])=>{const dt=g(k+"_dt");if(dt&&!okD(dt))cuErr[k]="Enter a valid date.";docs[k]={st:g(k+"_st")||"Pending",no:g(k+"_no"),dt,doc:cdoc[k]||null}});
+  const rule=cuCfg.dup,dup=rule=="off"?null:rawCU.find(c=>c.id!=cuEdit&&c.name.toLowerCase()==name.toLowerCase()&&(rule=="name_dealer"?(c.dealer||"")==dealer:rule=="name_showroom"?(c.showroom||"")==show:(c.city||"").toLowerCase()==city.toLowerCase()));
+  if(dup&&!cuErr.name&&!cuDupOk){cuErr.name="Possible duplicate: "+dup.cid+". Tap Save again to confirm.";cuDupOk=true}else if(!dup)cuDupOk=false;
+  if(Object.keys(cuErr).length){render();return}
+  const now=new Date().toISOString(),base={date,name,dealer,showroom:show,stage:g("stage")||STG()[0],query:g("query"),reason:g("reason"),city,address:g("addr"),...docs};
+  try{if(!cuEdit){let cid=cuNextId;if(!cid||rawCU.some(c=>c.cid==cid))cid=genCid();const id="CU"+Date.now().toString(36).toUpperCase();
+      await db.collection("customers").doc(id).set({...base,cid,owner:me||"",created:now,updated:now,fups:[],history:[{at:now,by:me||"",f:"Created",from:"—",to:base.stage,remark:base.reason}]});logAudit("customer.create",id,cid);cusel=id;toast="Saved "+cid}
+    else{const o=rawCU.find(x=>x.id==cuEdit),h=[...o.history],ch=(f,a,b,r)=>{if(String(a||"")!=String(b||""))h.push({at:now,by:me||"",f,from:a||"—",to:b||"—",remark:r||""})};
+      ch("Stage",o.stage,base.stage,base.reason);DK.forEach(([k,l])=>{ch(l+" status",o[k].st,docs[k].st);ch(l+" number",o[k].no,docs[k].no);ch(l+" date",o[k].dt,docs[k].dt);ch(l+" document",(o[k].doc||{}).name,(docs[k].doc||{}).name)});
+      ["name","dealer","showroom","city","address","query","reason"].forEach(f=>ch("Detail: "+f,o[f],base[f]));
+      await db.collection("customers").doc(cuEdit).update({...base,updated:now,history:h});logAudit("customer.update",cuEdit,o.cid);cusel=cuEdit;toast="Changes saved"}
+    cuv="detail";cuEdit=null;FV={};cdoc={inv:null,ins:null,rto:null}}catch(e){toast="Save failed: "+e.message}render()}
+function fuForm(id){return `<div class="card" style="margin:6px 0"><b>Add follow-up</b><input id="fd_${id}" type="date"><select id="fw_${id}">${staff.filter(u=>u.active).map(u=>`<option value="${u.id}" ${u.id==me?"selected":""}>${esc(u.name)}</option>`).join("")}</select><input id="fr_${id}" placeholder="Remarks"><button class="b" onclick="cuAddFU('${id}')">Save follow-up</button></div>`}
+async function cuAddFU(id){const c=rawCU.find(x=>x.id==id),d=($("#fd_"+id)||{}).value;if(!okD(d)){toast="Pick a valid follow-up date.";render();return}
+  const f={id:"F"+Date.now().toString(36),date:d,who:$("#fw_"+id).value,remark:$("#fr_"+id).value.trim(),done:false,at:new Date().toISOString(),by:me||""};
+  await db.collection("customers").doc(id).update({fups:[...(c.fups||[]),f],history:[...c.history,{at:f.at,by:me||"",f:"Follow-up",from:"—",to:d+" → "+snm(f.who),remark:f.remark}]});logAudit("customer.followup",id,d);pwOpen=null;toast="Follow-up added";render()}
+async function cuFUdone(id,fid){const c=rawCU.find(x=>x.id==id),now=new Date().toISOString();
+  await db.collection("customers").doc(id).update({fups:c.fups.map(f=>f.id==fid?{...f,done:true,doneAt:now}:f),history:[...c.history,{at:now,by:me||"",f:"Follow-up",from:"Open",to:"Done",remark:""}]})}
+async function cuStage(id){const c=rawCU.find(x=>x.id==id),to=$("#cu_stg").value,rm=$("#cu_rm").value.trim();if(to==c.stage){toast="Stage unchanged.";render();return}
+  const now=new Date().toISOString();await db.collection("customers").doc(id).update({stage:to,reason:rm||c.reason,updated:now,history:[...c.history,{at:now,by:me||"",f:"Stage",from:c.stage,to,remark:rm}]});logAudit("customer.stage",id,to);toast="Stage updated";render()}
+function cuDetail(){const c=rawCU.find(x=>x.id==cusel);if(!c||!cuVis().some(x=>x.id==c.id))return '<div class="card">Record not available.</div>';
+  const ed=cuCanEdit(c),F=openFU(c);
+  return `<button class="b s" onclick="goBack()">← Back</button>
+  <div class="card"><div class="row"><b style="font-size:17px">${esc(c.name)}</b><span class="cb ${cbc(c.stage)}">${esc(c.stage)}</span></div><div class="mu">${c.cid} · ${c.date}</div>
+  <div class="mu" style="margin-top:6px">🏢 ${esc(c.dealer||"—")} · ${esc(c.showroom||"—")}</div><div class="mu">📍 ${esc([c.city,c.address].filter(Boolean).join(", ")||"—")}</div>
+  ${c.query?`<div style="margin-top:8px"><span class="mu">Query</span><div>${esc(c.query)}</div></div>`:""}${c.reason?`<div style="margin-top:6px"><span class="mu">Reason</span><div>${esc(c.reason)}</div></div>`:""}</div>
+  <div class="card"><b class="em-h">Documents</b>${DK.map(([k,l])=>`<div style="padding:8px 0;border-bottom:1px solid var(--ln)"><div class="row"><b>${l}</b><span class="cb ${cbc(c[k].st)}">${c[k].st}</span></div><div class="mu">${c[k].no?esc(c[k].no):"No number"}${c[k].dt?" · "+c[k].dt:""}</div>${c[k].doc?`<a href="#" onclick="openDoc('${esc(c[k].doc.id)}');return false" style="color:var(--nv)">📎 ${esc(c[k].doc.name)}</a>`:""}</div>`).join("")}</div>
+  <div class="card"><div class="grid">${ed?`<button class="b" style="margin:0" onclick="cuEditStart('${c.id}')">✏️ Edit</button>`:""}<button class="b s" style="margin:0" onclick="pwOpen=pwOpen=='${c.id}'?null:'${c.id}';render()">📅 Add follow-up</button><button class="b s" style="margin:0" onclick="cuExport('pdf','${c.id}')">⬇ PDF report</button><button class="b s" style="margin:0" onclick="cuExport('csv','${c.id}')">⬇ CSV</button></div>
+  ${pwOpen==c.id?fuForm(c.id):""}${ed?`<b>Update stage</b><select id="cu_stg">${STG().map(s=>`<option ${s==c.stage?"selected":""}>${esc(s)}</option>`).join("")}</select><input id="cu_rm" placeholder="Remarks / reason"><button class="b s" onclick="cuStage('${c.id}')">Update stage</button>`:""}</div>
+  ${cuXCard(c)}<div class="card"><b class="em-h">Follow-ups</b>${(c.fups||[]).slice().sort((a,b)=>b.date.localeCompare(a.date)).map(f=>`<div class="row" style="padding:6px 0;border-bottom:1px solid var(--ln)"><span>${f.date} · ${esc(snm(f.who))}<div class="mu">${esc(f.remark||"")}</div></span>${f.done?'<span class="cb cb-g">Done</span>':`<span><span class="cb ${f.date<today()?"cb-r":"cb-a"}">${f.date<today()?"Overdue":"Open"}</span> <a style="color:var(--nv)" onclick="cuFUdone('${c.id}','${f.id}')">Done</a></span>`}</div>`).join("")||'<p class="mu">None.</p>'}</div>
+  <details class="card"><summary class="em-h">History (${c.history.length})</summary>${c.history.slice().reverse().map(h=>`<div class="hm-tl"><i></i><div><b>${esc(h.f)}</b>: ${esc(h.from)} → <b>${esc(h.to)}</b><div class="mu">${new Date(h.at).toLocaleString()} · ${esc(snm(h.by))}${h.remark?" · "+esc(h.remark):""}</div></div></div>`).join("")}</details>`}
+function cuPending(){const L=cuVis().filter(c=>pend(c).length).sort((a,b)=>(isOver(b)?1:0)-(isOver(a)?1:0)||((openFU(a)[0]||{date:"9999"}).date).localeCompare((openFU(b)[0]||{date:"9999"}).date));
+  const od=L.filter(isOver).length;
+  return `<div class="grid" style="margin-bottom:10px"><div class="card"><div class="n">${L.length}</div><div class="mu">Customers with pending work</div></div><div class="card"><div class="n ${od?"bd":""}">${od}</div><div class="mu">Overdue follow-ups</div></div></div>`+
+  (L.map(c=>{const f=openFU(c)[0],ov=isOver(c);return `<div class="card" style="${ov?"border-color:var(--bd)":""}"><div class="row" onclick="cuPrev='pending';cusel='${c.id}';cuv='detail';render()"><b>${esc(c.name)}</b>${ov?'<span class="cb cb-r">OVERDUE</span>':f?'<span class="cb cb-b">Scheduled</span>':'<span class="cb cb-a">No follow-up</span>'}</div>
+  <div class="mu">${c.cid} · ${esc(c.dealer||"—")}</div><div class="cbr">${pend(c).map(([k,l])=>`<span class="cb ${cbc(c[k].st)}">${l}: ${c[k].st}</span>`).join("")}</div>
+  <div class="mu" style="margin-top:6px">${f?`Next: ${f.date} · ${esc(snm(f.who))}${f.remark?" · "+esc(f.remark):""}`:"Set a follow-up date and a responsible employee."}</div>
+  <button class="b s" onclick="pwOpen=pwOpen=='${c.id}'?null:'${c.id}';render()">📅 ${f?"Add another":"Add"} follow-up</button>${pwOpen==c.id?fuForm(c.id):""}</div>`}).join("")||'<div class="em-empty">No pending invoice, insurance or RTO booklet work. 🎉</div>')}
+function cuConfig(){return `<div class="card"><b class="em-h">Module settings (admin)</b><label class="mu">Stages (one per line)</label><textarea id="f_cc_stages" rows="6">${esc(STG().join("\n"))}</textarea><label class="mu">Duplicate check</label><select id="f_cc_dup">${[["name_dealer","Same name + dealer"],["name_showroom","Same name + showroom"],["name_city","Same name + city"],["off","Off"]].map(([v,l])=>`<option value="${v}" ${cuCfg.dup==v?"selected":""}>${l}</option>`).join("")}</select><button class="b s" onclick="cuSaveCfg()">Save settings</button><div class="notice">Dashboard cards use the default stage names (New, Query Received, Loan/Application in Process, Completed).</div></div>`}
+async function cuSaveCfg(){if(!isAdmin)return;const st=$("#f_cc_stages").value.split("\n").map(s=>s.trim()).filter(Boolean);if(st.length<2){toast="Add at least two stages.";render();return}
+  await db.collection("config").doc("customer").set({stages:uniq(st),dup:$("#f_cc_dup").value});FV={};logAudit("customer.config","","");toast="Settings saved";render()}
+function cuCsv(L){const q=v=>`"${String(v??"").replace(/"/g,'""')}"`;return "\ufeff"+[["Customer ID","Date","Customer Name","Dealer","Showroom","Stage","Location","Address","Invoice","Invoice No","Insurance","Policy No","RTO Booklet","RTO Ref","Query","Reason"],...L.map(c=>[c.cid,c.date,c.name,c.dealer,c.showroom,c.stage,c.city,c.address,c.inv.st,c.inv.no,c.ins.st,c.ins.no,c.rto.st,c.rto.no,c.query,c.reason])].map(r=>r.map(q).join(",")).join("\r\n")}
+function cuPdf(L,title,full){const J=window.jspdf&&window.jspdf.jsPDF;if(!J)return null;const d=new J({unit:"pt",format:"a4"});let y=50;d.setFontSize(16);d.text(title,40,y);y+=18;d.setFontSize(8);d.text("Generated "+new Date().toLocaleString()+" · LoanTrack Pro (internal tracking, not an official lender record)",40,y);y+=20;d.setFontSize(9.5);
+  const ln=t=>String(t).replace(/[^\x20-\x7E]/g,"?"),line=t=>d.splitTextToSize(ln(t),515).forEach(s=>{if(y>800){d.addPage();y=50}d.text(s,40,y);y+=13});
+  L.forEach(c=>{d.setFont(undefined,"bold");line(c.cid+" | "+c.date+" | "+c.name);d.setFont(undefined,"normal");line("Dealer: "+(c.dealer||"-")+" | Showroom: "+(c.showroom||"-")+" | Stage: "+c.stage);line("Location: "+([c.city,c.address].filter(Boolean).join(", ")||"-"));
+    line("Invoice: "+c.inv.st+(c.inv.no?" #"+c.inv.no:"")+(c.inv.dt?" ("+c.inv.dt+")":"")+" | Insurance: "+c.ins.st+(c.ins.no?" #"+c.ins.no:"")+(c.ins.dt?" ("+c.ins.dt+")":""));line("RTO booklet: "+c.rto.st+(c.rto.no?" #"+c.rto.no:"")+(c.rto.dt?" ("+c.rto.dt+")":""));
+    if(full){line("Query: "+(c.query||"-"));line("Reason: "+(c.reason||"-"));(c.fups||[]).forEach(f=>line("Follow-up "+f.date+" - "+snm(f.who)+(f.done?" (done)":"")+": "+(f.remark||"")));y+=4;line("History:");c.history.forEach(h=>line("  "+new Date(h.at).toLocaleString()+" - "+h.f+": "+h.from+" -> "+h.to+" ("+snm(h.by)+")"+(h.remark?" "+h.remark:"")))}y+=10});
+  return d.output("blob")}
+async function cuExport(kind,id){const L=id?rawCU.filter(c=>c.id==id):cuFiltered();if(!L.length){toast="Nothing to export.";render();return}
+  if(!CD){toast="Downloads are not available in this view.";render();return}
+  const data=kind=="csv"?new Blob([cuCsv(L)],{type:"text/csv"}):cuPdf(L,id?"Customer report - "+L[0].cid:"Customer list ("+L.length+")",!!id);
+  if(!data){toast="PDF library did not load. Check your connection and retry.";render();return}
+  try{await CD.save({filename:(id?L[0].cid:"customers-"+today())+(kind=="csv"?".csv":".pdf"),data});logAudit("customer.export",id||"",kind+" "+L.length+" rows");toast="Export ready"}catch(e){toast=e.code=="declined"?"Download cancelled.":"Export failed: "+(e.message||e.code)}render()}
+
+const XP=["Insurance","Extended Warranty","Personal Loan","Accessories Finance","FASTag","AMC / Service Plan","Other"];
+const XS=["Identified","Offered","Interested","Converted","Declined"];
+let XF="",cuPrev="list",cuNextId="";
+function genCid(){const d=new Date(),pre="CU-"+String(d.getFullYear()).slice(2)+String(d.getMonth()+1).padStart(2,"0")+"-";const mx=Math.max(0,...rawCU.filter(c=>(c.cid||"").startsWith(pre)).map(c=>parseInt(c.cid.slice(pre.length))||0));return pre+String(mx+1).padStart(4,"0")}
+function showBack(){return !!sess&&(tab=="calc"||(tab=="clients"&&!!sel)||(tab=="cust"&&cuv!="list"))}
+function goBack(){if(tab=="clients"&&sel){sel=null}else if(tab=="cust"&&cuv!="list"){if(cuv=="form"){cuv=cuEdit?"detail":"list";cuEdit=null;FV={}}else if(cuv=="detail"){cuv=cuPrev||"list";cusel=null}else{cuv="list";cusel=null}}else if(tab=="calc"){tab="home"}render()}
+function xForm(sfx,fixed){return `<div class="card" style="margin:6px 0"><b>New cross-sell opportunity</b>${fixed?"":`<select id="xc_${sfx}"><option value="">Select customer *</option>${cuVis().map(c=>`<option value="${c.id}">${esc(c.name)} · ${c.cid}</option>`).join("")}</select>`}<select id="xp_${sfx}">${XP.map(p=>`<option>${p}</option>`).join("")}</select><select id="xs_${sfx}">${XS.map(s=>`<option>${s}</option>`).join("")}</select><input id="xv_${sfx}" inputmode="decimal" placeholder="Expected value ₹ (optional)"><label class="mu">Follow-up date (optional)</label><input id="xd_${sfx}" type="date"><input id="xr_${sfx}" placeholder="Remarks"><button class="b" onclick="cuAddX('${sfx}','${fixed||""}')">Add opportunity</button></div>`}
+async function cuAddX(sfx,fixed){const id=fixed||($("#xc_"+sfx)||{}).value,c=rawCU.find(x=>x.id==id);if(!c){toast="Select a customer.";render();return}
+  const g=k=>($("#"+k+"_"+sfx)||{value:""}).value.trim(),v=g("xv"),d=g("xd"),p=g("xp"),s=g("xs");
+  if(v!==""&&!(Number(v)>=0)){toast="Enter a valid expected value.";render();return}if(d&&!okD(d)){toast="Enter a valid date.";render();return}
+  if((c.cross||[]).some(x=>x.product==p&&!["Converted","Declined"].includes(x.status))){toast=p+" is already open for this customer.";render();return}
+  const now=new Date().toISOString(),x={id:"X"+Date.now().toString(36),product:p,status:s,value:v===""?null:Number(v),date:d,remark:g("xr"),at:now,by:me||""};
+  try{await db.collection("customers").doc(id).update({cross:[...(c.cross||[]),x],history:[...c.history,{at:now,by:me||"",f:"Cross-sell",from:"—",to:p+" · "+s,remark:x.remark}]});logAudit("cross.create",id,p);toast="Cross-sell added"}catch(e){toast="Save failed: "+e.message}render()}
+async function cuXStatus(id,xid,st){const c=rawCU.find(x=>x.id==id),x=(c.cross||[]).find(y=>y.id==xid);if(!x||x.status==st)return;const now=new Date().toISOString();
+  await db.collection("customers").doc(id).update({cross:c.cross.map(y=>y.id==xid?{...y,status:st}:y),history:[...c.history,{at:now,by:me||"",f:"Cross-sell: "+x.product,from:x.status,to:st,remark:""}]});logAudit("cross.status",id,x.product+" → "+st)}
+function xRow(c,x,showCust){const ov=x.date&&x.date<today()&&!["Converted","Declined"].includes(x.status);
+  return `<div style="padding:8px 0;border-bottom:1px solid var(--ln)">${showCust?`<div class="row" onclick="cuPrev='cross';cusel='${c.id}';cuv='detail';render()"><b>${esc(c.name)}</b><span class="mu">${c.cid}</span></div>`:""}<div class="row" style="align-items:center"><span><b>${esc(x.product)}</b>${x.value!=null?" · "+fmtC(x.value):""}<div class="mu">${x.date?"Follow-up "+x.date:"No follow-up date"}${ov?' <span class="cb cb-r">Overdue</span>':""}${x.remark?" · "+esc(x.remark):""}</div></span><select style="width:auto;margin:0" onchange="cuXStatus('${c.id}','${x.id}',this.value)">${XS.map(s=>`<option ${s==x.status?"selected":""}>${s}</option>`).join("")}</select></div></div>`}
+function cuXCard(c){return `<div class="card"><b class="em-h">Cross sell</b>${(c.cross||[]).map(x=>xRow(c,x,false)).join("")||'<p class="mu">No opportunities yet.</p>'}<details><summary class="mu" style="color:var(--nv);cursor:pointer;margin-top:8px">＋ Add cross-sell</summary>${xForm(c.id,c.id)}</details></div>`}
+function cuCross(){const all=cuVis().flatMap(c=>(c.cross||[]).map(x=>({c,x}))),L=all.filter(o=>!XF||o.x.status==XF).sort((a,b)=>(b.x.at||"").localeCompare(a.x.at||"")),n=s=>all.filter(o=>o.x.status==s).length,conv=all.filter(o=>o.x.status=="Converted").reduce((s,o)=>s+Number(o.x.value||0),0);
+  return `<div class="hm-kp">${[["🔁","Opportunities",all.length,"#5b8fd6"],["📣","Offered",n("Offered"),"#2f80ed"],["👍","Interested",n("Interested"),"#d4a017"],["✅","Converted",n("Converted"),"#27ae60"],["💰","Converted value",fmtC(conv),"#14b8a6"]].map(([i,l,v,k])=>`<div style="border-top:3px solid ${k}"><span>${i}</span><b>${v}</b><small>${l}</small></div>`).join("")}</div>
+  <select onchange="XF=this.value;render()"><option value="">All statuses</option>${XS.map(s=>`<option ${XF==s?"selected":""}>${s}</option>`).join("")}</select>
+  <div class="card">${L.map(o=>xRow(o.c,o.x,true)).join("")||'<div class="em-empty" style="margin:0">No cross-sell opportunities yet. Add one below or from a customer page.</div>'}</div>
+  <details class="card"><summary class="em-h">＋ New cross-sell</summary>${xForm("g","")}</details>`}
+try{history.pushState({lt:1},"");window.addEventListener("popstate",()=>{try{history.pushState({lt:1},"")}catch(e){}if(sess&&showBack())goBack()})}catch(e){}
+
+let plCur=[],plT;
+function plPairs(city){const c=(city||"").trim().toLowerCase();if(!c)return[];const m=new Map();
+  showL.filter(s=>(s.city||"").toLowerCase()==c).forEach(s=>m.set((s.dealer||"")+"|"+s.name,{dealer:s.dealer||"",show:s.name,addr:s.address||""}));
+  cuVis().filter(x=>(x.city||"").toLowerCase()==c&&(x.dealer||x.showroom)).sort((a,b)=>(a.created||"").localeCompare(b.created||"")).forEach(x=>{const k=(x.dealer||"")+"|"+(x.showroom||""),o=m.get(k);m.set(k,{dealer:x.dealer||"",show:x.showroom||"",addr:x.address||(o&&o.addr)||""})});
+  return [...m.values()]}
+function plHTML(){const city=(($("#f_cu_city")||{}).value||FV.f_cu_city||"").trim();plCur=plPairs(city);if(!plCur.length)return"";
+  return `<div class="notice">Saved dealers &amp; showrooms for ${esc(city)} — tap to fill:</div>`+plCur.map((p,i)=>`<button class="b s" style="margin:3px 0;text-align:left" onclick="cuUsePair(${i})">🏢 ${esc(p.dealer||"—")} · ${esc(p.show||"—")}</button>`).join("")}
+function plDeb(){clearTimeout(plT);plT=setTimeout(cuCityPick,500)}
+function plSet(id,v){const e=$("#"+id);if(e&&v&&!e.value.trim())e.value=v}
+function cuCityPick(){const b=$("#plbox");if(!b)return;b.innerHTML=plHTML();
+  if(plCur.length==1){const p=plCur[0];plSet("f_cu_dealer",p.dealer);plSet("f_cu_show",p.show);plSet("f_cu_addr",p.addr);cuDealerChg()}}
+function cuUsePair(i){const p=plCur[i];if(!p)return;const d=$("#f_cu_dealer"),s=$("#f_cu_show");if(d)d.value=p.dealer;if(s)s.value=p.show;plSet("f_cu_addr",p.addr);cuDealerChg()}
+function cuPlaceInfo(name,dealer){const n=(name||"").toLowerCase(),d=(dealer||"").toLowerCase();
+  const s=showL.find(x=>x.name.toLowerCase()==n&&(!d||!x.dealer||x.dealer.toLowerCase()==d));
+  const c=cuVis().filter(x=>(x.showroom||"").toLowerCase()==n&&(!d||(x.dealer||"").toLowerCase()==d)).sort((a,b)=>(b.created||"").localeCompare(a.created||""))[0];
+  return {city:(s&&s.city)||(c&&c.city)||"",addr:(s&&s.address)||(c&&c.address)||"",dealer:(s&&s.dealer)||(c&&c.dealer)||""}}
+function cuShowPick(){const sh=($("#f_cu_show")||{value:""}).value.trim();if(!sh)return;const i=cuPlaceInfo(sh,($("#f_cu_dealer")||{value:""}).value.trim());
+  plSet("f_cu_dealer",i.dealer);plSet("f_cu_city",i.city);plSet("f_cu_addr",i.addr);const b=$("#plbox");if(b)b.innerHTML=plHTML()}
+function cuDealerPick(){const d=($("#f_cu_dealer")||{value:""}).value.trim().toLowerCase();if(!d||($("#f_cu_show")||{}).value)return;
+  const o=showL.filter(s=>(s.dealer||"").toLowerCase()==d);if(o.length==1){plSet("f_cu_show",o[0].name);cuShowPick()}}
+async function seed(){const n=["Asha Verma","Rohit Mehta","Sana Khan","Vikram Rao"],now=new Date().toISOString();
+  for(let i=0;i<4;i++){const s=ST[[0,3,4,8][i]];await db.collection("clients").doc("DEMO"+(i+1)).set({name:n[i],ref:"DEMO-"+(100+i),mobile:"98000000"+(10+i),city:"Pune",loanType:LT[i],amount:200000*(i+1),appDate:today(),source:SRC[i],priority:["Low","Medium","High","Medium"][i],status:s,notes:"Fictional record",demo:true,owner:me||"",created:now,history:[{from:"—",to:s,at:now,by:me||"",note:"DEMO seed",next:""}]})}
+  await db.collection("tasks").doc("TDEMO1").set({cid:"DEMO1",name:n[0],date:today(),type:"Call",status:"Pending",note:"DEMO follow-up"})}
+function render(keep){
+  if(!db)return;if(!sess){renderLogin();return}clients=canAll?rawC:rawC.filter(c=>c.owner===me);tasks=canAll?rawT:rawT.filter(t=>clients.some(c=>c.id==t.cid));const ae=document.activeElement,aid=ae&&ae.id;
+  if(!skipCap)document.querySelectorAll("#app [id^=f_],#app [id^=d_]").forEach(e=>FV[e.id]=e.value);skipCap=false;
+  const T={home:["Home",home],clients:["Clients",()=>sel?detail():list()],add:["Add Client",addForm],fu:["Follow-ups",fups],calc:["EMI",calcView],cust:["Customers",custTab],me:["Profile",profile]};
+  $("#app").innerHTML=(toast?`<div class="card">${esc(toast)}</div>`:"")+T[tab][1]();toast="";
+  $("#nav").innerHTML=Object.entries(T).filter(([k])=>k!="calc"&&k!="add").map(([k,v])=>`<button class="${tab==k?"on":""}" onclick="tab='${k}';sel=null;errs={};FV={};ei=null;CR=tab=='calc'?CR:null;render()">${ICN[k]}<br>${v[0]}</button>`).join("");
+  const nb=tasks.filter(x=>x.status=="Pending"&&x.date<=today()).length;
+  $("#bk").innerHTML=showBack()?'<button class="bkb" onclick="goBack()" aria-label="Back">←</button>':"";
+  $("#bell").innerHTML=`<span class="bell">🔔${nb?`<i>${nb}</i>`:""}</span>`;
+  Object.entries(FV).forEach(([k,v])=>{const e=$("#"+k);if(e)e.value=v});
+  if(aid&&/^[fdc]_/.test(aid)){const e=$("#"+aid);if(e){e.focus();try{e.setSelectionRange(e.value.length,e.value.length)}catch(_){}}}
+  if(keep&&ae&&ae.id=="q"){const e=$("#q");e.focus();e.setSelectionRange(q.length,q.length)}}
+window.addEventListener("DOMContentLoaded",()=>init());
+</script></body></html>
